@@ -1,12 +1,11 @@
 # Analyzers
-
 [submodule "3rd-party/analyzer/verilator"]
 	path = 3rd-party/analyzer/verilator
 	url = https://github.com/Leakbox258/verilator.git
-# Test Projects
 [submodule "3rd-party/analyzer/WireSort"]
 	path = 3rd-party/analyzer/WireSort
 	url = https://github.com/Leakbox258/PyRTL.git
+# Test Projects
 [submodule "3rd-party/projects/tiny-gpu"]
 	path = 3rd-party/projects/tiny-gpu
 	url = https://github.com/QinlinChen/tiny-gpu.git
