@@ -1,0 +1,75 @@
+# Analyzers
+
+[submodule "3rd-party/analyzer/verilator"]
+	path = 3rd-party/analyzer/verilator
+	url = https://github.com/Leakbox258/verilator.git
+# Test Projects
+[submodule "3rd-party/analyzer/WireSort"]
+	path = 3rd-party/analyzer/WireSort
+	url = https://github.com/Leakbox258/PyRTL.git
+[submodule "3rd-party/projects/tiny-gpu"]
+	path = 3rd-party/projects/tiny-gpu
+	url = https://github.com/QinlinChen/tiny-gpu.git
+[submodule "3rd-party/projects/hdmi"]
+	path = 3rd-party/projects/hdmi
+	url = https://github.com/QinlinChen/hdmi.git
+[submodule "3rd-party/projects/picorv32"]
+	path = 3rd-party/projects/picorv32
+	url = https://github.com/YosysHQ/picorv32.git
+[submodule "3rd-party/projects/darkriscv"]
+	path = 3rd-party/projects/darkriscv
+	url = https://github.com/darklife/darkriscv.git
+[submodule "3rd-party/projects/e203"]
+	path = 3rd-party/projects/e203
+	url = https://github.com/riscv-mcu/e203_hbirdv2.git
+[submodule "3rd-party/projects/32-Verilog-Mini-Projects"]
+	path = 3rd-party/projects/32-Verilog-Mini-Projects
+	url = https://github.com/sudhamshu091/32-Verilog-Mini-Projects.git
+[submodule "3rd-party/projects/basic_verilog"]
+	path = 3rd-party/projects/basic_verilog
+	url = https://github.com/JacyCui/basic_verilog.git
+[submodule "3rd-party/projects/serv"]
+	path = 3rd-party/projects/serv
+	url = https://github.com/JacyCui/serv.git
+[submodule "3rd-party/projects/verilog-axi"]
+	path = 3rd-party/projects/verilog-axi
+	url = https://github.com/alexforencich/verilog-axi.git
+[submodule "3rd-party/projects/riscv"]
+	path = 3rd-party/projects/riscv
+	url = https://github.com/ultraembedded/riscv.git
+[submodule "3rd-party/projects/verilog-pcie"]
+	path = 3rd-party/projects/verilog-pcie
+	url = https://github.com/alexforencich/verilog-pcie.git
+[submodule "3rd-party/projects/miaow"]
+	path = 3rd-party/projects/miaow
+	url = https://github.com/VerticalResearchGroup/miaow.git
+[submodule "3rd-party/projects/biriscv"]
+	path = 3rd-party/projects/biriscv
+	url = https://github.com/JacyCui/biriscv.git
+[submodule "3rd-party/projects/hazard3"]
+	path = 3rd-party/projects/hazard3
+	url = git@github.com:Wren6991/Hazard3.git
+[submodule "3rd-party/projects/hdl"]
+	path = 3rd-party/projects/hdl
+	url = https://github.com/QinlinChen/hdl.git
+[submodule "3rd-party/projects/riffa"]
+	path = 3rd-party/projects/riffa
+	url = https://github.com/KastnerRG/riffa.git
+[submodule "3rd-party/projects/verigpu"]
+	path = 3rd-party/projects/verigpu
+	url = https://github.com/hughperkins/VeriGPU.git
+[submodule "3rd-party/projects/zipcpu"]
+	path = 3rd-party/projects/zipcpu
+	url = https://github.com/ZipCPU/zipcpu.git
+[submodule "3rd-party/projects/verilog-ethernet"]
+	path = 3rd-party/projects/verilog-ethernet
+	url = https://github.com/alexforencich/verilog-ethernet.git
+[submodule "3rd-party/projects/openc910"]
+	path = 3rd-party/projects/openc910
+	url = https://github.com/XUANTIE-RV/openc910.git
+[submodule "3rd-party/projects/scr1"]
+	path = 3rd-party/projects/scr1
+	url = https://github.com/syntacore/scr1.git
+[submodule "3rd-party/projects/vortex"]
+	path = 3rd-party/projects/vortex
+	url = https://github.com/JacyCui/vortex.git
