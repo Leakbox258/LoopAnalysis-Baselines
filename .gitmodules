@@ -63,9 +63,6 @@
 [submodule "3rd-party/projects/verilog-ethernet"]
 	path = 3rd-party/projects/verilog-ethernet
 	url = https://github.com/alexforencich/verilog-ethernet.git
-[submodule "3rd-party/projects/openc910"]
-	path = 3rd-party/projects/openc910
-	url = https://github.com/XUANTIE-RV/openc910.git
 [submodule "3rd-party/projects/scr1"]
 	path = 3rd-party/projects/scr1
 	url = https://github.com/syntacore/scr1.git
