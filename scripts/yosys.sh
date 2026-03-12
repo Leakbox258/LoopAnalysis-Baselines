@@ -13,8 +13,14 @@ yosysEval() {
 		source "$boot"
 		fileCollection=()
 		topCollection=()
+		definitions=()
+		includes=()
 
-		collectWithTop "$PROJECTS" "$fileCollection" "$topCollection"
+		collectWithTop  "$PROJECTS" \
+						fileCollection \
+						topCollection \
+						definitions \
+						includes
 		
 		sizeFiles=${#fileCollection[@]}
 		sizeTops=${#topCollection[@]}
@@ -28,7 +34,11 @@ yosysEval() {
 			files=${fileCollection[i]}
 
 			begin=$(date "+%s%N")
-			yosysOutput=$(${YOSYS} -p "read_verilog -sv ${files}; hierarchy -check -top ${top}; proc; scc")
+			# make yosys auto infer top module
+			yosysOutput=$(${YOSYS} -p "read_verilog -sv ${definitions[*]} ${includes[*]} ${files}; \
+										hierarchy -check -auto-top; \
+										proc; \
+										scc")
 			end=$(date "+%s%N")
 
 			consume=$(( end - begin ))

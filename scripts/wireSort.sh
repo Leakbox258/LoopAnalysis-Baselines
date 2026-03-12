@@ -16,8 +16,13 @@ wireSortEval() {
 		source "$boot"
 		fileCollection=()
 		topCollection=()
+		definitions=()
+		includes=()
 
-		collectWithTop "$PROJECTS" "$fileCollection" "$topCollection"
+		collectWithTop  "$PROJECTS" \
+						fileCollection \
+						topCollection \
+						definitions
 		
 		sizeFiles=${#fileCollection[@]}
 		sizeTops=${#topCollection[@]}
@@ -32,7 +37,11 @@ wireSortEval() {
 			blif="${top}.blif"
 
 			begin=$(date "+%s%N")
-			${YOSYS} -p "read_verilog -sv ${files}; hierarchy -check -top ${top}; synth; write_blif ${blif}"
+			# make yousys auto infer top module
+			${YOSYS} -p "read_verilog -sv ${definitions[*]} ${includes[*]} ${files}; \
+			 				hierarchy -check -auto-top; \
+							synth; \
+							write_blif ${blif}"
 			end=$(date "+%s%N")
 
 			badConnections="${PYTHON3} ${WIRE_SORT_SCRIPT} ${PYRTL_PACKAGE_PATH} ${blif}"

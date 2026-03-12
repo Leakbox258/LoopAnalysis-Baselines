@@ -13,8 +13,14 @@ verilatorEval() {
 		source "$boot"
 		fileCollection=()
 		topCollection=()
+		definitions=()
+		includes=()
 
-		collectWithTop "$PROJECTS" "$fileCollection" "$topCollection"
+		collectWithTop  "$PROJECTS" \
+						fileCollection \
+						topCollection \
+						definitions \
+						includes
 		
 		sizeFiles=${#fileCollection[@]}
 		sizeTops=${#topCollection[@]}
@@ -28,7 +34,10 @@ verilatorEval() {
 			top=${topCollection[i]}
 			
 			begin=$(date '+%s%N')
-			SCC=$(${VERILATOR} --lint-only --stats "${file}" | awk '/Find SCC: / {print $NF}')
+			SCC=$(${VERILATOR} --lint-only --stats \
+								"${definitions[*]}" \
+								"${includes[*]}" \
+								"${file}" | awk '/Find SCC: / {print $NF}')
 			end=$(date '+%s%N')
 			consume=$(( (end - begin) / 1000_000 ))
 

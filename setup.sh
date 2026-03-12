@@ -5,12 +5,12 @@ set -euo pipefail
 git submodule update --init --recursive
 
 printf "\033[33mBuild Verilator5.0 from source...\033[0m"
-cd ./3rd-party/analyzer/verilator
+pushd ./3rd-party/analyzer/verilator > /dev/null
 autoconf
 ./configure --prefix="$(pwd)"/build
 make -j 16
 make install
-cd -
+popd > /dev/null
 printf "\033[32mIntall Verialtor on Path: 3rd-party/analyzer/verilator/build/bin/verilator\033[0m"
 
 if [ ! -x "./3rd-party/analyzer/verilator/build/bin/verilator" ]; then
@@ -19,10 +19,10 @@ if [ ! -x "./3rd-party/analyzer/verilator/build/bin/verilator" ]; then
 fi
 
 printf "\033[33mBuild PyRTL(WireSorts) package from source \033[0m"
-cd ./3rd-party/analyzer/WireSorts/
+pushd ./3rd-party/analyzer/WireSorts/ > /dev/null
 python3 setup.py build
 python3 setup.py install --prefix="$(pwd)"/build
-cd -
+popd > /dev/null
 printf "\033[32mInstall PyRTL(WireSorts) package on Path: 3rd-party/analyzer/WireSorts/build/lib/pyrtl\033[0m"
 
 if [ ! -d "./3rd-party/analyzer/WireSorts/build/lib/pyrtl" ]; then
