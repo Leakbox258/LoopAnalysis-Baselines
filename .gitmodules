@@ -11,7 +11,7 @@
 	url = https://github.com/QinlinChen/tiny-gpu.git
 [submodule "3rd-party/projects/hdmi"]
 	path = 3rd-party/projects/hdmi
-	url = https://github.com/QinlinChen/hdmi.git
+	url = https://github.com/Leakbox258/hdmi
 [submodule "3rd-party/projects/picorv32"]
 	path = 3rd-party/projects/picorv32
 	url = https://github.com/YosysHQ/picorv32.git
@@ -26,7 +26,7 @@
 	url = https://github.com/sudhamshu091/32-Verilog-Mini-Projects.git
 [submodule "3rd-party/projects/basic_verilog"]
 	path = 3rd-party/projects/basic_verilog
-	url = https://github.com/JacyCui/basic_verilog.git
+	url = https://github.com/Leakbox258/basic_verilog
 [submodule "3rd-party/projects/serv"]
 	path = 3rd-party/projects/serv
 	url = https://github.com/JacyCui/serv.git
@@ -59,10 +59,13 @@
 	url = https://github.com/ZipCPU/zipcpu.git
 [submodule "3rd-party/projects/verilog-ethernet"]
 	path = 3rd-party/projects/verilog-ethernet
-	url = https://github.com/alexforencich/verilog-ethernet.git
+	url = https://github.com/Leakbox258/verilog-ethernet
 [submodule "3rd-party/projects/scr1"]
 	path = 3rd-party/projects/scr1
 	url = https://github.com/syntacore/scr1.git
 [submodule "3rd-party/projects/vortex"]
 	path = 3rd-party/projects/vortex
-	url = https://github.com/JacyCui/vortex.git
+	url = https://github.com/Leakbox258/vortex
+[submodule "3rd-party/analyzer/yosys-slang"]
+	path = 3rd-party/analyzer/yosys-slang
+	url = https://github.com/povik/yosys-slang
