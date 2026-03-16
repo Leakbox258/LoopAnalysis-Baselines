@@ -5,20 +5,28 @@ set -euo pipefail
 PROJECT_NAME="e203"
 
 collectWithTop() {
-	PROJECTS=$1
-	declare -n fileSets=$2
-	declare -n tops=$3
-	declare -n defs=$4
-	declare -n incs=$5
+	local PROJECTS=$1
+	local -n fileSets=$2
+	local -n tops=$3
+	local -n defs=$4
+	local -n incs=$5
 
-	pushd "${PROJECTS}/${PROJECT_NAME}/rtl/e203" > /dev/null
-	path=$(pwd)
+	local RTL_DIR=$(realpath "${PROJECTS}/${PROJECT_NAME}/rtl/e203")
+	pushd "$RTL_DIR" > /dev/null
 	
-	tops[${#tops[@]}]="e203"
-	source=$(find "." -name "*.v" | awk -v pwd="$path" '{printf "%s/%s ", pwd, $1}')
+	local current_files=()
+	while IFS= read -r -d '' file; do
+		if [[ "$(wc -c < "$file")" -gt 1 ]]; then
+			current_files+=("$(realpath "$file")")
+		fi
+	done < <(find "." -name "*.v" -print0)
 	
-	fileSets[${#fileSets[@]}]="$source"
-	defs[${#defs[@]}]="-DFPGA_SOURCE"
-	incs[${#incs[@]}]="-I${PROJECTS}/${PROJECT_NAME}/rtl/e203/core"
+	if (( ${#current_files[@]} > 0 )); then
+		tops+=("e203")
+		fileSets+=("$(printf "%q " "${current_files[@]}")")
+		defs+=("-DFPGA_SOURCE")
+		incs+=("-I$(realpath "core")")
+		incs+=("-I$(realpath "perips/apb_i2c")")
+	fi
 	popd > /dev/null
 }

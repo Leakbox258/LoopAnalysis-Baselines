@@ -5,16 +5,23 @@ set -euo pipefail
 PROJECT_NAME="hdmi"
 
 collectWithTop() {
-	PROJECTS=$1
-	declare -n fileSets=$2
-	declare -n tops=$3
+	local PROJECTS=$1
+	local -n fileSets=$2
+	local -n tops=$3
 
-	pushd "${PROJECTS}/${PROJECT_NAME}/src" > /dev/null
-	path=$(pwd)
+	local SRC_DIR=$(realpath "${PROJECTS}/${PROJECT_NAME}/src")
+	pushd "$SRC_DIR" > /dev/null
 	
-	tops[${#tops[@]}]="hdmi"
-	source=$(find "." -name "*.sv" | awk -v pwd="$path" '{printf "%s/%s ", pwd, $1}')
+	local current_files=()
+	while IFS= read -r -d '' file; do
+		if [[ "$(wc -c < "$file")" -gt 1 ]]; then
+			current_files+=("$(realpath "$file")")
+		fi
+	done < <(find "." -name "*.sv" -print0)
 
-	fileSets[${#fileSets[@]}]="$source"
+	if (( ${#current_files[@]} > 0 )); then
+		tops+=("hdmi")
+		fileSets+=("$(printf "%q " "${current_files[@]}")")
+	fi
 	popd > /dev/null
 }

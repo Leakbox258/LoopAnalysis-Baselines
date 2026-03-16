@@ -5,6 +5,7 @@ set -euo pipefail
 PROJECT_NAME="riffa"
 
 VERILOG_FILES=(
+	fpga/riffa_hdl/functions.vh
 	fpga/riffa_hdl/tx_port_writer.v 
   	fpga/riffa_hdl/tx_multiplexer.v 
   	fpga/riffa_hdl/syncff.v 
@@ -70,16 +71,26 @@ VERILOG_FILES=(
   	)
 
 collectWithTop() {
-	PROJECTS=$1
-	declare -n fileSets=$2
-	declare -n tops=$3
+	local PROJECTS=$1
+	local -n fileSets=$2
+	local -n tops=$3
+	local -n incs=$5
 
 	pushd "${PROJECTS}/${PROJECT_NAME}"> /dev/null
-	tops[${#tops[@]}]="riffa"
-	hdls=()
+	local hdls=()
 	for file in "${VERILOG_FILES[@]}"; do
-		hdls[${#hdls[@]}]="$(pwd)/${file}"
+		local abs_f=$(realpath "$file")
+		if [[ -f "$abs_f" && "$(wc -c < "$abs_f")" -gt 1 ]]; then
+			hdls+=("$abs_f")
+		fi
 	done
-	fileSets[${#fileSets[@]}]="${hdls[*]}"
+	
+	if (( ${#hdls[@]} > 0 )); then
+		tops+=("${PROJECT_NAME}")
+		fileSets+=("$(printf "%q " "${hdls[@]}")")
+	fi
+
+	incs+=("-I${PROJECTS}/${PROJECT_NAME}/fpga/riffa_hdl")
+
 	popd > /dev/null
 }

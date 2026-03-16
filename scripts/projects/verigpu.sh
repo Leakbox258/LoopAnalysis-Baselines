@@ -5,46 +5,64 @@ set -euo pipefail
 PROJECT_NAME="verigpu"
 
 preprocess() {
-	PROJECTS=$1
-  
-	if [[ -e build/verigpu ]]; then
-		if (( $(wc build/verigpu -l) == 6161 )); then # 6162 with last '\n'
-			return
-		fi
-	fi
+    local PROJECTS=$1
+    local BUILD_DIR="build"
+    local TARGET="${BUILD_DIR}/verigpu.sv"
+    local PARAMS_FILE="${BUILD_DIR}/verigpu_params.sv"
 
-  	cat > "build/verigpu_params.sv" << 'EOF'
+    mkdir -p "$BUILD_DIR"
+
+    if [[ -f "$TARGET" ]]; then
+        if (( $(wc -l < "$TARGET") == 6161 )); then
+            return
+        fi
+    fi
+
+
+    cat > "$PARAMS_FILE" << 'EOF'
 parameter pos_width = $clog2(data_width);
 parameter adder_width = 32;
 parameter half_width = adder_width / 2;
 parameter width = 32;
 EOF
 
-	# shellcheck disable=SC2046
-  	cat \
-		"${PROJECTS}/${PROJECT_NAME}/src/const.sv" \
-		"build/verigpu_params.sv" \
-		"${PROJECTS}/${PROJECT_NAME}/src/op_const.sv" \
-		"${PROJECTS}/${PROJECT_NAME}/src/assert.sv" \
-		"${PROJECTS}/${PROJECT_NAME}/src/float/float_params.sv" \
-		"${PROJECTS}/${PROJECT_NAME}/src/mem_large.sv" \
-		$(find "${PROJECTS}/${PROJECT_NAME}/src/" -name '*.sv' \
-												! -name 'const.sv' \
-												! -name 'op_const.sv' \
-												! -name 'assert.sv' \
-												! -name "float_params.sv" \
-												! -name "mem_*" \
-			) \
-	> build/verigpu.sv
+
+    local SRC_DIR="${PROJECTS}/${PROJECT_NAME}/src"
+
+    {
+        cat "${SRC_DIR}/const.sv"
+        cat "$PARAMS_FILE"
+        cat "${SRC_DIR}/op_const.sv"
+        cat "${SRC_DIR}/assert.sv"
+        cat "${SRC_DIR}/float/float_params.sv"
+        cat "${SRC_DIR}/mem_large.sv"
+
+        find "$SRC_DIR" -name '*.sv' \
+            ! -name 'const.sv' \
+            ! -name 'op_const.sv' \
+            ! -name 'assert.sv' \
+            ! -name "float_params.sv" \
+            ! -name "mem_*" \
+            -exec cat {} +
+    } > "$TARGET"
 }
 
 collectWithTop() {
-	PROJECTS=$1
-	declare -n fileSets=$2
-	declare -n tops=$3
+    local PROJECTS=$1
+    local -n fileSets=$2
+    local -n tops=$3
 
-	preprocess "${PROJECTS}"
+    preprocess "$PROJECTS"
 
-	tops[${tops[@]}]="verigpu"
-	fileSets[${fileSets[@]}]="build/verigpu.sv"
+    local ABS_TARGET
+    ABS_TARGET=$(realpath "build/verigpu.sv")
+
+    if [[ -f "$ABS_TARGET" && "$(wc -c < "$ABS_TARGET")" -gt 1 ]]; then
+        tops+=("verigpu")
+
+        fileSets+=("$(printf "%q " "$ABS_TARGET")")
+    else
+        echo "Error: verigpu.sv was not generated correctly at $ABS_TARGET" >&2
+        return 1
+    fi
 }

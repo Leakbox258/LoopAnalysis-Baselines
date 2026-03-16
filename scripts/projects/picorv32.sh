@@ -5,14 +5,14 @@ set -euo pipefail
 PROJECT_NAME="picorv32"
 
 collectWithTop() {
-	PROJECTS=$1
-	declare -n fileSets=$2
-	declare -n tops=$3
+	local PROJECTS=$1
+	local -n fileSets=$2
+	local -n tops=$3
 
-	pushd "${PROJECTS}/${PROJECT_NAME}" > /dev/null
-	path=$(pwd)
+	local TARGET_FILE=$(realpath "${PROJECTS}/${PROJECT_NAME}/picorv32.v")
 	
-	tops[${#tops[@]}]="picorv32"
-	fileSets[${#fileSets[@]}]="${path}/picorv32.v"
-	popd > /dev/null
+	if [[ -f "$TARGET_FILE" && "$(wc -c < "$TARGET_FILE")" -gt 1 ]]; then
+		tops+=("picorv32")
+		fileSets+=("$(printf "%q " "$TARGET_FILE")")
+	fi
 }

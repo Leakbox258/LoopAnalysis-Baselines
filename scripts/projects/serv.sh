@@ -4,17 +4,25 @@ set -euo pipefail
 
 PROJECT_NAME="serv"
 
+
 collectWithTop() {
-	PROJECTS=$1
-	declare -n fileSets=$2
-	declare -n tops=$3
+	local PROJECTS=$1
+	local -n fileSets=$2
+	local -n tops=$3
 
-	pushd "${PROJECTS}/${PROJECT_NAME}/rtl" > /dev/null
-	path=$(pwd)
+	local SRC_DIR=$(realpath "${PROJECTS}/${PROJECT_NAME}/rtl")
+	pushd "$SRC_DIR" > /dev/null
 	
-	tops[${#tops[@]}]="serv"
-	source=$(find "." -name "*.v" | awk -v pwd="$path" '{printf "%s/%s ", pwd, $1}')
+	local current_files=()
+	while IFS= read -r -d '' file; do
+		if [[ "$(wc -c < "$file")" -gt 1 ]]; then
+			current_files+=("$(realpath "$file")")
+		fi
+	done < <(find "." -name "*.v" -print0)
 
-	fileSets[${#fileSets[@]}]="$source"
+	if (( ${#current_files[@]} > 0 )); then
+		tops+=("${PROJECT_NAME}")
+		fileSets+=("$(printf "%q " "${current_files[@]}")")
+	fi
 	popd > /dev/null
 }

@@ -39,9 +39,6 @@
 [submodule "3rd-party/projects/verilog-pcie"]
 	path = 3rd-party/projects/verilog-pcie
 	url = https://github.com/alexforencich/verilog-pcie.git
-[submodule "3rd-party/projects/miaow"]
-	path = 3rd-party/projects/miaow
-	url = https://github.com/VerticalResearchGroup/miaow.git
 [submodule "3rd-party/projects/biriscv"]
 	path = 3rd-party/projects/biriscv
 	url = https://github.com/JacyCui/biriscv.git

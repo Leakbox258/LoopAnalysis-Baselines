@@ -5,30 +5,27 @@ set -euo pipefail
 PROJECT_NAME="hazard3"
 
 collectWithTop() {
-	PROJECTS=$1
-	declare -n fileSets=$2
-	declare -n tops=$3
-	declare -n incs=$5
+	local PROJECTS=$1
+	local -n fileSets=$2
+	local -n tops=$3
+	local -n incs=$5
 
-	pushd "${PROJECTS}/${PROJECT_NAME}/hdl" > /dev/null
-	path=$(pwd)
-	
-	tops[${#tops[@]}]="hazard3"
-	source=()
-	for hdl in ./*.v; do
-		source+=("$(echo "$hdl" | awk -v pwd="$path" '{printf "%s/%s ", pwd, $1}')")
+	local BASE=$(realpath "${PROJECTS}/${PROJECT_NAME}/hdl")
+	local current_files=()
+
+	# 搜寻两个目录
+	for d in "$BASE" "${BASE}/arith"; do
+		[ -d "$d" ] || continue
+		while IFS= read -r -d '' f; do
+			if [[ "$(wc -c < "$f")" -gt 1 ]]; then
+				current_files+=("$f")
+			fi
+		done < <(find "$d" -maxdepth 1 -name "*.v" -print0)
 	done
 
-	pushd ./arith > /dev/null
-	path=$(pwd)
-
-	for hdl in ./*.v; do
-		source+=("$(echo "$hdl" | awk -v pwd="$path" '{printf "%s/%s ", pwd, $1}')")
-	done
-
-	popd > /dev/null
-
-	fileSets[${#fileSets[@]}]="${source[*]}"
-	incs[${#incs[@]}]="-I${PROJECTS}/${PROJECT_NAME}/hdl"
-	popd > /dev/null
+	if (( ${#current_files[@]} > 0 )); then
+		tops+=("hazard3")
+		fileSets+=("$(printf "%q " "${current_files[@]}")")
+		incs+=("-I$BASE")
+	fi
 }

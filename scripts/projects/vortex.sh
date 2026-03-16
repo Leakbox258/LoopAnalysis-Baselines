@@ -5,39 +5,35 @@ set -euo pipefail
 PROJECT_NAME="vortex"
 
 collectWithTop() {
-	PROJECTS=$1
-	declare -n fileSets=$2
-	declare -n tops=$3
-	declare -n defs=$4
-	declare -n incs=$5
+	local PROJECTS=$1
+	local -n fileSets=$2
+	local -n tops=$3
+	local -n defs=$4
+	local -n incs=$5
 
-	source=("$(find "${PROJECTS}/${PROJECT_NAME}/hw/rtl" -name "*.sv") \
-				| awk '{printf "%s " $1}'")
-	source+=("$(find "${PROJECTS}/${PROJECT_NAME}/third_party/hardfloat/source" \
-					 -name "*.v" \
-					 | grep -vE "8086|ARM") \
-					 | awk '{printf "%s " $1}'")
+	local current_files=()
+	while IFS= read -r -d '' f; do
+		[[ "$(wc -c < "$f")" -gt 1 ]] && current_files+=("$(realpath "$f")")
+	done < <(find "${PROJECTS}/${PROJECT_NAME}/hw/rtl" -name "*.sv" -name "*.vh" -print0)
+
+	while IFS= read -r -d '' f; do
+		if [[ ! $f =~ (8086|ARM) ]] && [[ "$(wc -c < "$f")" -gt 1 ]]; then
+			current_files+=("$(realpath "$f")")
+		fi
+	done < <(find "${PROJECTS}/${PROJECT_NAME}/third_party/hardfloat/source" -name "*.v" -print0)
 	
-	includes=()
+	incs+=("-I${PROJECTS}/${PROJECT_NAME}/hw/rtl/afu/xrt/")
 	while IFS= read -r dir; do
-		includes+=("-I" "$dir")
-	done < <(find "${PROJECTS}/${PROJECT_NAME}/hw/rtl" \
-					-name "*.vh" \
-					-exec dirname {} \; \
-					| sort -u \
-					)
+		incs+=("-I$(realpath "$dir")")
+	done < <(find "${PROJECTS}/${PROJECT_NAME}/hw/rtl" -name "*.vh" -exec dirname {} \; | sort -u)
 
 	while IFS= read -r dir; do
-		includes+=("-I" "$dir")
-	done < <(find "${PROJECTS}/${PROJECT_NAME}/third_party/hardfloat/source" \
-					-name "*.vi" \
-					-exec dirname {} \; \
-					| sort -u \
-					| grep -vE "8086|ARM" \
-					)
+		if [[ ! $dir =~ (8086|ARM) ]]; then
+			incs+=("-I$(realpath "$dir")")
+		fi
+	done < <(find "${PROJECTS}/${PROJECT_NAME}/third_party/hardfloat/source" -name "*.vi" -exec dirname {} \; | sort -u)
 
-	tops[${#tops[@]}]="vortex"
-	fileSets[${#fileSets[@]}]="${source[*]}"
-	defs[${#defs[@]}]="-DNOPAE -DEXT_TCU_ENABLE"
-	incs[${#incs[@]}]="${includes[*]}"
+	tops+=("vortex")
+	fileSets+=("$(printf "%q " "${current_files[@]}")")
+	defs+=("-DNOPAE" "-DEXT_TCU_ENABLE" "-DexpWidth=8")
 }

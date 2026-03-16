@@ -5,16 +5,27 @@ set -euo pipefail
 PROJECT_NAME="riscv"
 
 collectWithTop() {
-	PROJECTS=$1
-	declare -n fileSets=$2
-	declare -n tops=$3
+	local PROJECTS=$1
+	local -n fileSets=$2
+	local -n tops=$3
+	local -n incs=$4
 
-	pushd "${PROJECTS}/${PROJECT_NAME}/core" > /dev/null
-	path=$(pwd)
+	local SRC_DIR=$(realpath "${PROJECTS}/${PROJECT_NAME}/core")
+	pushd "$SRC_DIR" > /dev/null
 	
-	tops[${#tops[@]}]="riscv"
-	source=$(find "." -name "*.v" | awk -v pwd="$path" '{printf "%s/%s ", pwd, $1}')
+	local current_files=()
+	while IFS= read -r -d '' file; do
+		if [[ "$(wc -c < "$file")" -gt 1 ]]; then
+			current_files+=("$(realpath "$file")")
+		fi
+	done < <(find "." -name "*.v" -print0)
 
-	fileSets[${#fileSets[@]}]="$source"
+	if (( ${#current_files[@]} > 0 )); then
+		tops+=("${PROJECT_NAME}")
+		fileSets+=("$(printf "%q " "${current_files[@]}")")
+	fi
+
+	incs+=("-I${PROJECTS}/${PROJECT_NAME}/core/riscv/")
+
 	popd > /dev/null
 }

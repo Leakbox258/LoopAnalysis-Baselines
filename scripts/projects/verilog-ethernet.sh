@@ -5,17 +5,23 @@ set -euo pipefail
 PROJECT_NAME="verilog-ethernet"
 
 collectWithTop() {
-	PROJECTS=$1
-	declare -n fileSets=$2
-	declare -n tops=$3
+	local PROJECTS=$1
+	local -n fileSets=$2
+	local -n tops=$3
 
-	pushd "${PROJECTS}/${PROJECT_NAME}" > /dev/null
-	path=$(pwd)
+	local ROOT_DIR=$(realpath "${PROJECTS}/${PROJECT_NAME}")
+	pushd "$ROOT_DIR" > /dev/null
 	
-	tops[${#tops[@]}]="verilog_ethernet"
-	source=$(find ./lib/axis/rtl/ ./rtl/ -name "*.v" \
-						| awk -v pwd="$path" '{printf "%s/%s ", pwd, $1}')
+	local current_files=()
+	while IFS= read -r -d '' file; do
+		if [[ "$(wc -c < "$file")" -gt 1 ]]; then
+			current_files+=("$(realpath "$file")")
+		fi
+	done < <(find ./lib/axis/rtl/ ./rtl/ -name "*.v" -print0)
 
-	fileSets[${#fileSets[@]}]="$source"
+	if (( ${#current_files[@]} > 0 )); then
+		tops+=("verilog_ethernet")
+		fileSets+=("$(printf "%q " "${current_files[@]}")")
+	fi
 	popd > /dev/null
 }

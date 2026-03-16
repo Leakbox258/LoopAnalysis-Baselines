@@ -37,21 +37,31 @@ VERILOG_FILES=(
 	)
 
 collectWithTop() {
-	PROJECTS=$1
-	declare -n fileSets=$2
-	declare -n tops=$3
-	declare -n defs=$4
-	declare -n incs=$5
+    local PROJECTS=$1
+    local -n fileSets=$2
+    local -n tops=$3
+    local -n defs=$4
+    local -n incs=$5
 
-	tops[${#tops[@]}]="scr1"
+    local SRC_ROOT
+    SRC_ROOT=$(realpath "${PROJECTS}/${PROJECT_NAME}/src")
+    
+    local current_files=()
 
-	source=()
-	path="${PROJECTS}/${PROJECT_NAME}/src"
-	for hdl in "${VERILOG_FILES[@]}"; do
-		source+=("${path}/${hdl}")
-	done
+    for hdl in "${VERILOG_FILES[@]}"; do
+        local abs_file="${SRC_ROOT}/${hdl}"
+        
+        if [[ -f "$abs_file" && "$(wc -c < "$abs_file")" -gt 1 ]]; then
+            current_files+=("$abs_file")
+        fi
+    done
 
-	fileSets[${#fileSets[@]}]="${source[*]}"
-	defs[${#defs[@]}]="-DSCR1_CFG_RV32IMC_MAX"
-	incs[${#incs[@]}]="-I${PROJECTS}/${PROJECT_NAME}/src/includes"
+    if (( ${#current_files[@]} > 0 )); then
+        tops+=("scr1")
+        
+        fileSets+=("$(printf "%q " "${current_files[@]}")")
+        
+        defs+=("-DSCR1_CFG_RV32IMC_MAX")
+        incs+=("-I${SRC_ROOT}/includes")
+    fi
 }

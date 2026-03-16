@@ -4,30 +4,35 @@ set -euo pipefail
 
 PROJECT_NAME="zipcpu"
 
-# find -wholename has to begin with './'
 VERILOG_FILES=(
-	./zipsystem.v 
-  	./core/*.v 
-  	./zipdma/*.v 
-  	./ex/*.v 
-  	./peripherals/*.v
-  )
+	"./zipsystem.v" 
+  	"./core/*.v" 
+  	"./zipdma/*.v" 
+  	"./ex/*.v" 
+  	"./peripherals/*.v"
+)
 
 collectWithTop() {
-	PROJECTS=$1
-	declare -n fileSets=$2
-	declare -n tops=$3
+	local PROJECTS=$1
+	local -n fileSets=$2
+	local -n tops=$3
 
-	pushd "${PROJECTS}/${PROJECT_NAME}/rtl" > /dev/null
-	path=$(pwd)
+	local RTL_DIR=$(realpath "${PROJECTS}/${PROJECT_NAME}/rtl")
+	pushd "$RTL_DIR" > /dev/null
 	
-	tops[${#tops[@]}]="zipcpu"
-
-	source=()
-	for regex in "${VERILOG_FILES[@]}"; do
-		source+=("$(find . -wholename "${regex}" | awk -v pwd="$path" '{printf "%s/%s", pwd, $1}' )")
+	local current_files=()
+	for pattern in "${VERILOG_FILES[@]}"; do
+		# 展开通配符并检查
+		for f in $pattern; do
+			if [[ -f "$f" && "$(wc -c < "$f")" -gt 1 ]]; then
+				current_files+=("$(realpath "$f")")
+			fi
+		done
 	done
 
-	fileSets[${#fileSets[@]}]="${source[*]}"
+	if (( ${#current_files[@]} > 0 )); then
+		tops+=("zipcpu")
+		fileSets+=("$(printf "%q " "${current_files[@]}")")
+	fi
 	popd > /dev/null
 }
