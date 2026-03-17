@@ -50,7 +50,7 @@
 	ignore = dirty
 [submodule "3rd-party/projects/verilog-pcie"]
 	path = 3rd-party/projects/verilog-pcie
-	url = https://github.com/alexforencich/verilog-pcie.git
+	url = https://github.com/Leakbox258/verilog-pcie.git
 	ignore = dirty
 [submodule "3rd-party/projects/biriscv"]
 	path = 3rd-party/projects/biriscv
@@ -70,7 +70,7 @@
 	ignore = dirty
 [submodule "3rd-party/projects/verigpu"]
 	path = 3rd-party/projects/verigpu
-	url = https://github.com/hughperkins/VeriGPU.git
+	url = https://github.com/Leakbox258/VeriGPU.git
 	ignore = dirty
 [submodule "3rd-party/projects/zipcpu"]
 	path = 3rd-party/projects/zipcpu

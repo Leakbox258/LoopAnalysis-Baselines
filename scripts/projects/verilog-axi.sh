@@ -4,6 +4,22 @@ set -euo pipefail
 
 PROJECT_NAME="verilog-axi"
 
+qualify() {
+	mode=$1
+
+	case $mode in
+		"eval-verilator")
+			return 0
+			;;
+		"eval-wiresort")
+			return 0
+			;;
+		"eval-yosys")
+			return 0
+			;;
+	esac
+}
+
 collectWithTop() {
     local PROJECTS=$1
     local -n fileSets=$2
@@ -29,14 +45,11 @@ collectWithTop() {
                 ! -name "*_tb.v" \
                 ! -name "tb_*.v" -print0)
 
-    for hdl_path in "${all_v_files[@]}"; do
-        local filename
-        filename=$(basename "$hdl_path")
-        
-        tops+=("${filename%.*}")
-        
-        fileSets+=("$(printf "%q " "$hdl_path")")
-    done
+    if (( ${#all_v_files[@]} > 0 )); then
+        tops+=("${PROJECT_NAME}_merged_top")
+
+        fileSets+=("$(printf "%q " "${all_v_files[@]}")")
+    fi
 
     popd > /dev/null
 }

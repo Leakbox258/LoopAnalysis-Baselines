@@ -4,6 +4,22 @@ set -euo pipefail
 
 PROJECT_NAME="verigpu"
 
+qualify() {
+	mode=$1
+
+	case $mode in
+		"eval-verilator")
+			return 0
+			;;
+		"eval-wiresort")
+			return 0
+			;;
+		"eval-yosys")
+			return 0
+			;;
+	esac
+}
+
 preprocess() {
     local PROJECTS=$1
     local BUILD_DIR="build"

@@ -4,6 +4,22 @@ set -euo pipefail
 
 PROJECT_NAME="zipcpu"
 
+qualify() {
+	mode=$1
+
+	case $mode in
+		"eval-verilator")
+			return 0
+			;;
+		"eval-wiresort")
+			return 1
+			;;
+		"eval-yosys")
+			return 1
+			;;
+	esac
+}
+
 VERILOG_FILES=(
 	"./zipsystem.v" 
   	"./core/*.v" 

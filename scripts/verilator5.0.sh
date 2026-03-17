@@ -3,17 +3,26 @@
 set -euo pipefail
 
 verilatorEval() {
+
 	VERILATOR=$1
 	PROJECTS_PATH=$2
 	local -n EVAL_PROJECT=$3
 	sccNum=0 # Data/AstNode level SCC
 	timeConsume=0 # ms
-	report="TopName    SCC    Time(ms)"
+	report="TopName    Project    SCC    Time(ms)"
 
 	for boot in "${EVAL_PROJECT[@]}"; do
 		source "$boot"
 
 		echo "Evaluation on ${boot}" 1>&2
+
+		if ! qualify "eval-verilator"; then
+			echo "Skip evaluation on ${boot}" 1>&2
+			continue
+		fi
+
+		basename=$(basename "$boot")
+		project_name=${basename%.sh}
 
 		fileCollection=()
 		topCollection=()
@@ -33,33 +42,26 @@ verilatorEval() {
 			echo "size of file collection don't match size of top collection"
 		fi
 
+		eval "incs=( ${includes[*]})"
+		eval "defs=( ${definitions[*]})"
 		for (( i=0; i<"$sizeFiles"; i++ )); do
 			eval "files=( ${fileCollection[$i]} )"
 			top=${topCollection[i]}
 			
 			begin=$(date '+%s%N')
-			SCC=$(${VERILATOR} --lint-only --stats \
-								--Wwarn-ASSIGNIN \
-								--Wwarn-MODMISSING \
-								-Wno-fatal \
-								-Wno-ZEROREPL \
-								-Wno-PINNOTFOUND \
+			SCC=$(${VERILATOR} --lint-only --stats --debug \
+								--Wwarn-ASSIGNIN --Wwarn-MODMISSING -Wno-fatal -Wno-ZEROREPL -Wno-PINNOTFOUND \
 								"${incs[@]}" \
 								"${defs[@]}" \
 								"${files[@]}" \
-								2>&1 \
-								| awk '/Find SCC: / {print $NF}')
+								2>&1 | awk '/UnOptimized: Find [0-9]+ SCCs/ { sum = $4 } END { print sum + 0 }')
 
 			end=$(date '+%s%N')
 			consume=$(( (end - begin) / 1000000 ))
 			timeConsume=$(( timeConsume + consume ))
 
-			if [[ -z "$SCC" ]]; then
-				SCC=0
-			fi
-
 			sccNum=$(( sccNum + SCC ))
-			report=$(printf "%s\n%s\t%d\t%d\t" "$report" "$top" "$SCC" "$consume")
+			report=$(printf "%s\n%s\t%s\t%d\t%d\t" "$report" "$top" "$project_name" "$SCC" "$consume")
 		done
 	done
 

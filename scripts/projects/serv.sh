@@ -4,6 +4,21 @@ set -euo pipefail
 
 PROJECT_NAME="serv"
 
+qualify() {
+	mode=$1
+
+	case $mode in
+		"eval-verilator")
+			return 0
+			;;
+		"eval-wiresort")
+			return 0
+			;;
+		"eval-yosys")
+			return 0
+			;;
+	esac
+}
 
 collectWithTop() {
 	local PROJECTS=$1

@@ -13,10 +13,21 @@ wireSortEval() {
 	declare -n EVAL_PROJECT=$5
 	badConnectionNum=0 # module-port level
 	timeConsume=0 # ms
-	report="TopName    SCC    Time(ms)"
+	report="TopName    Project    SCC    Time(ms)"
 
 	for boot in "${EVAL_PROJECT[@]}"; do
 		source "$boot"
+
+		echo "Evaluation on ${boot}" 1>&2
+
+		if ! qualify "eval-wiresort"; then
+			echo "Skip evaluation on ${boot}" 1>&2
+			continue
+		fi
+
+		basename=$(basename "$boot")
+		project_name=${basename%.sh}
+
 		fileCollection=()
 		topCollection=()
 		definitions=()
@@ -50,30 +61,28 @@ wireSortEval() {
 			top=${topCollection[i]}
 			blif="${top}.blif"
 			
-			echo "$top" 1>&2
 			tmp_ys="${BUILD}/blifGen_${top}_${i}.ys"
 			touch "$tmp_ys"
 
-			{
-				echo "plugin -i ${BUILD}/slang.so"
-				echo "verilog_defaults -add -sv"
+		{
 
-				for def in "${definitions[@]}"; do
-					echo "verilog_defaults -add $def"
-				done
+			# # Deprecated, working for read_verilog
+			# echo "verilog_defaults -add -sv"
 
-				for inc in "${includes[@]}"; do
-					echo "verilog_defaults -add $inc"
-				done
+			# for def in "${definitions[@]}"; do
+			# 	echo "verilog_defaults -add $def"
+			# done
 
-				for f in "${files[@]}"; do
-					echo "read_slang \"$f\""
-				done
+			# for inc in "${includes[@]}"; do
+			# 	echo "verilog_defaults -add $inc"
+			# done
 
-				echo "hierarchy -check -auto-top"
-				echo "synth"
-				echo "write_blif ${blif}"
-			} > "$tmp_ys"
+			echo "plugin -i ${BUILD}/slang.so"
+			echo "read_slang --ignore-timing ${definitions[*]} ${includes[*]} ${files[*]}"
+			echo "hierarchy -check -auto-top"
+			echo "synth"
+			echo "write_blif ${blif}"
+		} > "$tmp_ys"
 
 			${YOSYS} -s "$tmp_ys"
 
@@ -85,7 +94,7 @@ wireSortEval() {
 
 			badConnectionNum=$(( badConnectionNum + badConnections ))
 			timeConsume=$(( timeConsume + consume ))
-			report=$(printf "%s\n%s\t%d\t%d\t" "$report" "$top" "$badConnections" "$consume")
+			report=$(printf "%s\n%s\t%s\t%d\t%d\t" "$report" "$top" "$project_name" "$badConnections" "$consume")
 		done
 	done
 

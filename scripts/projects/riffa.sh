@@ -58,17 +58,38 @@ VERILOG_FILES=(
   	fpga/riffa_hdl/rxr_engine_classic.v 
   	fpga/riffa_hdl/txc_engine_classic.v 
   	fpga/riffa_hdl/txr_engine_classic.v 
-  	fpga/riffa_hdl/channel_32.v 
+  	fpga/riffa_hdl/channel_32.v
+	fpga/riffa_hdl/channel_128.v  
   	fpga/riffa_hdl/tx_port_32.v 
+  	fpga/riffa_hdl/tx_port_128.v 
   	fpga/riffa_hdl/rx_port_32.v 
+  	fpga/riffa_hdl/rx_port_128.v 
   	fpga/riffa_hdl/tx_port_buffer_32.v 
   	fpga/riffa_hdl/tx_port_channel_gate_32.v 
-  	fpga/riffa_hdl/tx_multiplexer_32.v 
+  	fpga/riffa_hdl/tx_multiplexer_32.v
+	fpga/riffa_hdl/tx_multiplexer_128.v 
   	fpga/riffa_hdl/tx_port_monitor_32.v 
   	fpga/riffa_hdl/sg_list_reader_32.v 
   	fpga/riffa_hdl/fifo_packer_32.v 
   	fpga/riffa_hdl/translation_altera.v
+	fpga/riffa_hdl/rx_engine_ultrascale.v
   	)
+
+qualify() {
+	mode=$1
+
+	case $mode in
+		"eval-verilator")
+			return 0
+			;;
+		"eval-wiresort")
+			return 1
+			;;
+		"eval-yosys")
+			return 1
+			;;
+	esac
+}
 
 collectWithTop() {
 	local PROJECTS=$1

@@ -4,11 +4,27 @@ set -euo pipefail
 
 PROJECT_NAME="hdl"
 
+qualify() {
+	mode=$1
+
+	case $mode in
+		"eval-verilator")
+			return 0
+			;;
+		"eval-wiresort")
+			return 1
+			;;
+		"eval-yosys")
+			return 1
+			;;
+	esac
+}
+
 collectWithTop() {
     local PROJECTS=$1
     local -n fileSets=$2
     local -n tops=$3
-	local -n incs=$5
+    local -n incs=$5
 
     local LIB_DIR=$(realpath "${PROJECTS}/${PROJECT_NAME}/library")
     

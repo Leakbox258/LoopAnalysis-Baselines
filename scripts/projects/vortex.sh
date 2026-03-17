@@ -4,6 +4,22 @@ set -euo pipefail
 
 PROJECT_NAME="vortex"
 
+qualify() {
+	mode=$1
+
+	case $mode in
+		"eval-verilator")
+			return 0
+			;;
+		"eval-wiresort")
+			return 1
+			;;
+		"eval-yosys")
+			return 1
+			;;
+	esac
+}
+
 collectWithTop() {
 	local PROJECTS=$1
 	local -n fileSets=$2

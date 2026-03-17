@@ -4,6 +4,33 @@ set -euo pipefail
 
 PROJECT_NAME="verilog-ethernet"
 
+# parameter bug find in axis_baser_rx_64.v:313
+# verilator will never end analyze it and slang will exit after detecting the bug
+# but original read_verilog from yosys will ignore the bug
+
+# 3rd-party/projects/verilog-ethernet/rtl/axis_baser_rx_64.v:313:40: error: cannot select range of 96 elements from 'reg[0:0]' [-Wrange-width-oob]
+#                 m_axis_tuser_next[1 +: PTP_TS_WIDTH] = (!PTP_TS_FMT_TOD || ptp_ts_borrow_reg) ? ptp_ts_reg : ptp_ts_adj_reg;
+#                                        ^~~~~~~~~~~~
+# 3rd-party/projects/verilog-ethernet/rtl/axis_xgmii_rx_64.v:241:40: error: cannot select range of 96 elements from 'reg[0:0]' [-Wrange-width-oob]
+#                 m_axis_tuser_next[1 +: PTP_TS_WIDTH] = (!PTP_TS_FMT_TOD || ptp_ts_borrow_reg) ? ptp_ts_reg : ptp_ts_adj_reg;
+#                                        ^~~~~~~~~~~~
+
+qualify() {
+	mode=$1
+
+	case $mode in
+		"eval-verilator")
+			return 1
+			;;
+		"eval-wiresort")
+			return 1
+			;;
+		"eval-yosys")
+			return 1
+			;;
+	esac
+}
+
 collectWithTop() {
 	local PROJECTS=$1
 	local -n fileSets=$2
