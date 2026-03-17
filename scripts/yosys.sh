@@ -57,12 +57,12 @@ yosysEval() {
 			eval "files=( ${fileCollection[$i]} )"
 			top=${topCollection[i]}
 			
-			tmp_ys="${BUILD}/yosys_${top}_${i}.ys"
+			tmp_ys="${BUILD}/yosys/${project_name}_yosys_${top}_${i}.ys"
 			touch "$tmp_ys"
 
 		{
 
-			# # Deprecated, working for read_verilog
+			# Deprecated, read_slang will force flatten design after reading
 			# echo "verilog_defaults -add -sv"
 
 			# for def in "${definitions[@]}"; do
@@ -75,7 +75,7 @@ yosysEval() {
 
 			echo "plugin -i ${BUILD}/slang.so"
 			echo "read_slang --ignore-timing ${definitions[*]} ${includes[*]} ${files[*]}"
-			echo "hierarchy -check -auto-top"
+			echo "hierarchy -check -auto-top" # use -auto-top for an overall checking
 			echo "proc"
 			echo "scc"
 		} > "$tmp_ys"
@@ -92,7 +92,7 @@ yosysEval() {
 			sccNum=$(( sccNum + yosysSCCNum ))
 			timeConsume=$(( timeConsume + consume ))
 
-			echo "$yosysOutput" > "${BUILD}/yosys_${top}_${i}.out"
+			echo "$yosysOutput" > "${BUILD}/yosys_out/${project_name}_yosys_${top}_${i}.out"
 
 			report=$(printf "%s\n%s\t%s\t%d\t%d\t" "$report" "$top" "$project_name" "$yosysSCCNum" "$consume")
 		done

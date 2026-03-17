@@ -36,7 +36,7 @@ collectWithTop() {
 	done < <(find "." -name "*.sv" -print0)
 
 	if (( ${#current_files[@]} > 0 )); then
-		tops+=("${PROJECT_NAME}")
+		tops+=("gpu")
 		fileSets+=("$(printf "%q " "${current_files[@]}")")
 	fi
 	popd > /dev/null

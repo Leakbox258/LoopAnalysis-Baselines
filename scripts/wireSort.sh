@@ -13,7 +13,7 @@ wireSortEval() {
 	declare -n EVAL_PROJECT=$5
 	badConnectionNum=0 # module-port level
 	timeConsume=0 # ms
-	report="TopName    Project    SCC    Time(ms)"
+	report="TopName    Project    BadConn    Time(ms)"
 
 	for boot in "${EVAL_PROJECT[@]}"; do
 		source "$boot"
@@ -57,40 +57,54 @@ wireSortEval() {
 		done
 
 		for (( i=0; i<"$sizeFiles"; i++ )); do
-			eval "files=( ${fileCollection[$i]} )"
-			top=${topCollection[i]}
-			blif="${top}.blif"
-			
-			tmp_ys="${BUILD}/blifGen_${top}_${i}.ys"
-			touch "$tmp_ys"
+            eval "files=( ${fileCollection[$i]} )"
+            top=${topCollection[i]}
+            blif="${BUILD}/blif/${project_name}_${top}.blif"
+            tmp_ys="${BUILD}/yosys/${project_name}_blifgen_${top}.ys"
 
-		{
+            mkdir -p "${BUILD}/blif" "${BUILD}/yosys"
 
-			# # Deprecated, working for read_verilog
-			# echo "verilog_defaults -add -sv"
+            {
+                # echo "plugin -i ${BUILD}/slang.so"
+                # echo "read_slang --ignore-timing ${definitions[*]} ${includes[*]} ${files[*]}"
+                
+				echo "verilog_defaults -add -sv"
 
-			# for def in "${definitions[@]}"; do
-			# 	echo "verilog_defaults -add $def"
-			# done
+				for def in "${definitions[@]}"; do
+					echo "verilog_defaults -add $def"
+				done
 
-			# for inc in "${includes[@]}"; do
-			# 	echo "verilog_defaults -add $inc"
-			# done
+				for inc in "${includes[@]}"; do
+					echo "verilog_defaults -add $inc"
+				done
 
-			echo "plugin -i ${BUILD}/slang.so"
-			echo "read_slang --ignore-timing ${definitions[*]} ${includes[*]} ${files[*]}"
-			echo "hierarchy -check -auto-top"
-			echo "synth"
-			echo "write_blif ${blif}"
-		} > "$tmp_ys"
+				echo "read_verilog ${files[*]}"
 
-			${YOSYS} -s "$tmp_ys"
+				echo "hierarchy -check -top ${top}"
 
-			begin=$(date "+%s%N")
-			badConnections="${PYTHON3} ${WIRE_SORT_SCRIPT} ${PYRTL_PACKAGE_PATH} ${blif}"
-			end=$(date "+%s%N")
+				echo "proc; memory;"
 
-			consume=$(( end - begin ))
+                echo "select -set original_clks w:*clk*"
+                echo "rename -enumerate -pattern %_net original_clks"
+
+                echo "write_blif ${blif}"
+            } > "$tmp_ys"
+
+            if [[ ! -f $blif ]]; then
+                printf "Generating Single BLIF for %s ...\n" "${top}" 1>&2
+                ${YOSYS} -q -s "$tmp_ys" 2> /dev/null
+            else
+                printf "Found BLIF for %s, skipping...\n" "${top}" 1>&2
+            fi
+        
+
+			wireSortOutput=$(${PYTHON3} "${WIRE_SORT_SCRIPT}" \
+										"${PYRTL_PACKAGE_PATH}" "${blif}")
+
+			badConnections=$(echo "$wireSortOutput" | awk '/find Bad Connection Counts: / {print $NF}')
+			consume=$(echo "$wireSortOutput" | awk '/Time Consume: / {print $3}')	
+
+			echo "$wireSortOutput" 1>&2
 
 			badConnectionNum=$(( badConnectionNum + badConnections ))
 			timeConsume=$(( timeConsume + consume ))
@@ -98,6 +112,6 @@ wireSortEval() {
 		done
 	done
 
-	printf "Wire Sort find %d bad connections in %d ms" "$badConnectionNum" "$timeConsume"
+	printf "Wire Sort find %d bad connections in %d ms\n" "$badConnectionNum" "$timeConsume"
 	printf "%s\n" "$report"
 }

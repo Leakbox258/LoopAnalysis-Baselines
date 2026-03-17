@@ -73,7 +73,7 @@ collectWithTop() {
     done
 
     if (( ${#current_files[@]} > 0 )); then
-        tops+=("scr1")
+        tops+=("scr1_core_top")
         
         fileSets+=("$(printf "%q " "${current_files[@]}")")
         

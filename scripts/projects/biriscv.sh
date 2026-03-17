@@ -38,7 +38,7 @@ collectWithTop() {
     done < <(find "$SRC_DIR" -name "*.v" -print0)
 
     if (( ${#current_files[@]} > 0 )); then
-        tops+=("biriscv")
+        tops+=("riscv_top")
         fileSets+=("$(printf "%q " "${current_files[@]}")")
     fi
 }

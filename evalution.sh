@@ -2,8 +2,20 @@
 
 set -euo pipefail
 
-PYRTL_PACKAGE_PATH=./3rd-party/analyzer/WireSorts/build/lib/pyrtl
+PYRTL_PACKAGE_PATH=$(find ./3rd-party -name "pyrtl-*.egg" -type d -o -name "pyrtl-*.egg" -type f | head -n 1)
+
+if [[ $PYRTL_PACKAGE_PATH == "" ]]; then
+	printf "Didn't find pyrtl package, run setup.sh to build and install.\n"
+	exit 1
+fi
+
 VERILATOR=./3rd-party/analyzer/verilator/build/bin/verilator
+
+if command -v "$($VERILATOR --help)" &> /dev/null; then
+	printf "Didn't find built verilator, run setup.sh to build.\n"
+	exit 1
+fi
+
 PROJECTS=./3rd-party/projects
 
 args=("$@")
@@ -88,6 +100,9 @@ for script in ./scripts/projects/*.sh; do
 	fi
 done
 
+mkdir -p build/blif
+mkdir -p build/yosys
+
 verilatorReport=""
 wireSortReport=""
 yosysReport=""
@@ -105,7 +120,7 @@ for mode in "${modes[@]}"; do
 		"eval-wiresort")
 			source ./scripts/wireSort.sh
 			wireSortReport+=$(wireSortEval "$PYRTL_PACKAGE_PATH" \
-											"./scripts/wireSort.py" \
+											"./scripts/implWireSort.py" \
 											"$yosys" \
 											"$PROJECTS" \
 											EVAL_PROJECTS

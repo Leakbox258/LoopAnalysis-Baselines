@@ -107,7 +107,7 @@ collectWithTop() {
 	done
 	
 	if (( ${#hdls[@]} > 0 )); then
-		tops+=("${PROJECT_NAME}")
+		tops+=("riffa")
 		fileSets+=("$(printf "%q " "${hdls[@]}")")
 	fi
 

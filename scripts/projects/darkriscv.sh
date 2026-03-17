@@ -46,7 +46,7 @@ collectWithTop() {
 	done
 	
 	if (( ${#hdls[@]} > 0 )); then
-		tops+=("${PROJECT_NAME}")
+		tops+=("darksocv")
 		fileSets+=("$(printf "%q " "${hdls[@]}")")
 	fi
 	incs+=("-I${PROJECTS}/${PROJECT_NAME}/rtl")
