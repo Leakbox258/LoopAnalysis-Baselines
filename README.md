@@ -7,9 +7,6 @@ To ensure consistency across disparate diagnostic outputs, the analysis of **Yos
 ## Time Consuming
 To quantify computational overhead, we utilize the native Linux `date` command to achieve **millisecond-level** resolution. It is noted that the recorded latency includes the latency of process spawning and context loading by the OS. Despite potential variances introduced by heterogeneous memory architectures and tool-specific implementations, the temporal results are posited to provide a valid benchmark for evaluating differences at the **algorithmic design level**.
 
-# Test Scope
-
-
 # Requirments
 - `verilator`: fork from https://github.com/verilator/verilatorm, slighty modified to collect SCC, instead of just warnings.
 - `PyRTL package`: for from https://github.com/pllab/PyRTL, slighty modified to only lint for bad connections.

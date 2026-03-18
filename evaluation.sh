@@ -33,9 +33,9 @@ for (( i=0; i<"${#args[@]}"; i+=1 )); do
         printf "Options:\n"
         printf "  -h, --help             Show this help message and exit\n"
         printf "  --skip <project>       Add a project to the skip list (can be used multiple times)\n"
-        printf "  --mode <mode>          Specify run modes: eval-verilator, eval-wiresort, eval-yosys, eval-all\n"
+        printf "  --mode <mode>          Specify run modes: test-scope, eval-verilator, eval-wiresort, eval-yosys, eval-all\n"
         printf "  --projects <project>   Specify certain projects to run\n"
-        printf "  --yosys <path>         Path to your yosys executable\n"
+        printf "  --yosys <path>         Path to your yosys executable, if not specified, try use \`yosys\` as default \n"
         exit 0
 	fi
 
@@ -153,7 +153,26 @@ for mode in "${modes[@]}"; do
 									EVAL_PROJECTS
 									)
 			;;
+		"test-scope")
+			source ./scripts/verilator5.0.sh
+			verilator_test_scope=()
+			printTestScope "./scripts" verilator_test_scope
+			printf "verilator test scope: %s\n" "${verilator_test_scope[*]}"
+
+			source ./scripts/wireSort.sh
+			wiresort_test_scope=()
+			printTestScope "./scripts" wiresort_test_scope
+			printf "verilator test scope: %s\n" "${wiresort_test_scope[*]}"
+
+			source ./scripts/yosys.sh
+			yosys_test_scope=()
+			printTestScope "./scripts" yosys_test_scope
+			printf "verilator test scope: %s\n" "${yosys_test_scope[*]}"
+
+			exit 0
+			;;
 		*)
+		
 			echo "Mode Usage: $0 [eval-verilator|eval-wireSort|eval-yosys|eval-all]"
 			exit 1
 	esac

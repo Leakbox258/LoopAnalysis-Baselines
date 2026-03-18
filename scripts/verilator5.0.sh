@@ -2,6 +2,18 @@
 
 set -euo pipefail
 
+printTestScope() {
+	SCRIPTS_PATH=$1
+	local -n projects=$2
+	for boot in "$SCRIPTS_PATH"/projects/*.sh; do
+		source "$boot"
+		
+		if qualify "eval-verilator"; then
+			projects+=("$(basename "$boot" .sh)")
+		fi
+	done
+}
+
 verilatorEval() {
 
 	VERILATOR=$1

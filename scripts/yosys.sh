@@ -4,6 +4,18 @@ set -euo pipefail
 
 BUILD="./build"
 
+printTestScope() {
+	SCRIPTS_PATH=$1
+	local -n projects=$2
+	for boot in "$SCRIPTS_PATH"/projects/*.sh; do
+		source "$boot"
+
+		if qualify "eval-yosys"; then
+			projects+=("$(basename "$boot" .sh)")
+		fi
+	done
+}
+
 yosysEval() {
 	YOSYS=$1
 	PROJECTS_PATH=$2

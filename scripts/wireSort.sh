@@ -5,6 +5,18 @@ set -euo pipefail
 BUILD="./build"
 PYTHON3=/usr/bin/python3
 
+printTestScope() {
+	SCRIPTS_PATH=$1
+	local -n projects=$2
+	for boot in "$SCRIPTS_PATH"/projects/*.sh; do
+		source "$boot"
+		
+		if qualify "eval-wiresort"; then
+			projects+=("$(basename "$boot" .sh)")
+		fi
+	done
+}
+
 wireSortEval() {
 	PYRTL_PACKAGE_PATH=$1
 	WIRE_SORT_SCRIPT=$2
