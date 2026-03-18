@@ -112,6 +112,7 @@ wireSortEval() {
 		done
 	done
 
-	printf "Wire Sort find %d bad connections in %d ms\n" "$badConnectionNum" "$timeConsume"
+	# printf "Wire Sort find %d bad connections in %d ms\n" "$badConnectionNum" "$timeConsume"
+
 	printf "%s\n" "$report"
 }

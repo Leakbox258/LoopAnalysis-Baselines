@@ -159,5 +159,54 @@ for mode in "${modes[@]}"; do
 	esac
 done
 
-# Debug
-printf "%s\n%s\n%s\n" "$verilatorReport" "$wireSortReport" "$yosysReport"
+DATE=$(date +%Y-%m-%d-%H-%M)
+REPORT_DIR="./report/${DATE}"
+
+mkdir -p "$REPORT_DIR"
+
+convert_to_md() {
+    local raw_data="$1"
+    local title="$2"
+    local suffix="$3"
+    
+    if [[ -z "$(echo "$raw_data" | tr -d '[:space:]')" ]]; then
+        return
+    fi
+
+    local output_file="${REPORT_DIR}/eval-${suffix}.md"
+    
+    {
+        echo "# ${title} Evaluation Report (${DATE})"
+        echo ""
+        echo "| TopName | Project | SCC | Time (ms) |"
+        echo "| :--- | :--- | :---: | :---: |"
+        
+        echo "$raw_data" | awk '
+        {
+            if ($1 == "TopName" || $1 == "") next;
+            printf("| %s | %s | %s | %s |\n", $1, $2, $3, $4);
+        }'
+    } > "$output_file"
+    
+    echo "Reported: $output_file"
+}
+
+for mode in "${modes[@]}"; do
+    case $mode in
+        "eval-verilator")
+            convert_to_md "$verilatorReport" "Verilator" "verilator"
+            ;;
+        "eval-wiresort")
+            convert_to_md "$wireSortReport" "WireSort" "wiresort"
+            ;;
+        "eval-yosys")
+            convert_to_md "$yosysReport" "Yosys" "yosys"
+            ;;
+        "eval-all")
+            convert_to_md "$verilatorReport" "Verilator" "verilator"
+            convert_to_md "$wireSortReport" "WireSort" "wiresort"
+            convert_to_md "$yosysReport" "Yosys" "yosys"
+            ;;
+        *)
+    esac
+done

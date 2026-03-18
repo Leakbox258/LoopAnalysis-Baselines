@@ -65,6 +65,7 @@ verilatorEval() {
 		done
 	done
 
-	printf "Verilator5.0 find %d SCCs in %d ms\n" "$sccNum" "$timeConsume"
+	# printf "Verilator5.0 find %d SCCs in %d ms\n" "$sccNum" "$timeConsume"
+
 	printf "%s\n" "$report"
 }

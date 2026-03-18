@@ -76,7 +76,7 @@ yosysEval() {
 			echo "plugin -i ${BUILD}/slang.so"
 			echo "read_slang --ignore-timing ${definitions[*]} ${includes[*]} ${files[*]}"
 			echo "hierarchy -check -auto-top" # use -auto-top for an overall checking
-			echo "proc"
+			echo "flatten" # https://github.com/YosysHQ/yosys/issues/3411
 			echo "scc"
 		} > "$tmp_ys"
 
@@ -87,7 +87,7 @@ yosysEval() {
 			end=$(date "+%s%N")
 
 			consume=$(( end - begin ))
-			yosysSCCNum=$(echo "$yosysOutput" | awk '/Found [0-9]+ SCCs/ {sum += $2} END {print sum+0}')
+			yosysSCCNum=$(echo "$yosysOutput" | awk '/Found [0-9]+ SCCs in module/ {sum += $2} END {print sum+0}')
 
 			sccNum=$(( sccNum + yosysSCCNum ))
 			timeConsume=$(( timeConsume + consume ))
@@ -98,6 +98,7 @@ yosysEval() {
 		done
 	done
 
-	printf "Yosys find %d SCCs in %d ms\n" "$sccNum" "$timeConsume"
+	# printf "Yosys find %d SCCs in %d ms\n" "$sccNum" "$timeConsume"
+
 	printf "%s\n" "$report"
 }

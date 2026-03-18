@@ -1,4 +1,6 @@
 build/*
 !build/*/
 build/*/*
-obj_dir
+obj_dir/
+report/*
+.vscode/
