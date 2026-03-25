@@ -98,7 +98,7 @@ yosysEval() {
 			yosysOutput=$(${YOSYS} -s "$tmp_ys" 2> /dev/null)
 			end=$(date "+%s%N")
 
-			consume=$(( end - begin ))
+			consume=$(( (end - begin) / 1000000 ))
 			yosysSCCNum=$(echo "$yosysOutput" | awk '/Found [0-9]+ SCCs in module/ {sum += $2} END {print sum+0}')
 
 			sccNum=$(( sccNum + yosysSCCNum ))

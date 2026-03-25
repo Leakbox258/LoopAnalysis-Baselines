@@ -114,7 +114,7 @@ wireSortEval() {
 										"${PYRTL_PACKAGE_PATH}" "${blif}")
 
 			badConnections=$(echo "$wireSortOutput" | awk '/find Bad Connection Counts: / {print $NF}')
-			consume=$(echo "$wireSortOutput" | awk '/Time Consume: / {print $3}')	
+			consume=$(( $(echo "$wireSortOutput" | awk '/Time Consume: / {print $3}') / 1000000 ))
 
 			echo "$wireSortOutput" 1>&2
 

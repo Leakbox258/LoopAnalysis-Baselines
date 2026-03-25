@@ -66,7 +66,7 @@ verilatorEval() {
 								"${incs[@]}" \
 								"${defs[@]}" \
 								"${files[@]}" \
-								2>&1 | awk '/UnOptimized: Find [0-9]+ SCCs/ { sum = $4 } END { print sum + 0 }')
+								 | awk '/UnOptimized: Find [0-9]+ SCCs/ { sum = $4 } END { print sum + 0 }')
 
 			end=$(date '+%s%N')
 			consume=$(( (end - begin) / 1000000 ))
