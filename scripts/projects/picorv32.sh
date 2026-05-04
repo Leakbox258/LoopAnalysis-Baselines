@@ -28,7 +28,19 @@ collectWithTop() {
 	local TARGET_FILE=$(realpath "${PROJECTS}/${PROJECT_NAME}/picorv32.v")
 	
 	if [[ -f "$TARGET_FILE" && "$(wc -c < "$TARGET_FILE")" -gt 1 ]]; then
-		tops+=("picorv32")
-		fileSets+=("$(printf "%q " "$TARGET_FILE")")
+		local current_file_set
+		current_file_set=$(printf "%q " "$TARGET_FILE")
+
+		# tops+=("picorv32")
+		# fileSets+=("$current_file_set")
+
+		tops+=("picorv32_axi")
+		fileSets+=("$current_file_set")
+
+		tops+=("picorv32_regs")
+		fileSets+=("$current_file_set")
+
+		tops+=("picorv32_wb")
+		fileSets+=("$current_file_set")
 	fi
 }

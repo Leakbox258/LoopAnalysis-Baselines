@@ -2,6 +2,28 @@
 
 set -euo pipefail
 
+count_project_source_lines() {
+	local total_lines=0
+	local -A seen_files=()
+	local file_set
+
+	for file_set in "$@"; do
+		local files=()
+		eval "files=( ${file_set} )"
+
+		for file in "${files[@]}"; do
+			if [[ -n ${seen_files["$file"]+x} ]]; then
+				continue
+			fi
+
+			seen_files["$file"]=1
+			total_lines=$(( total_lines + $(wc -l < "$file") ))
+		done
+	done
+
+	printf "%d\n" "$total_lines"
+}
+
 printTestScope() {
 	SCRIPTS_PATH=$1
 	local -n projects=$2
@@ -21,7 +43,7 @@ verilatorEval() {
 	local -n EVAL_PROJECT=$3
 	sccNum=0 # Data/AstNode level SCC
 	timeConsume=0 # ms
-	report="TopName    Project    SCC    Time(ms)"
+	report="TopName    Project    SCC    Time(ms)    SourceFileLines"
 
 	for boot in "${EVAL_PROJECT[@]}"; do
 		source "$boot"
@@ -54,6 +76,8 @@ verilatorEval() {
 			echo "size of file collection don't match size of top collection"
 		fi
 
+		projectSourceLines=$(count_project_source_lines "${fileCollection[@]}")
+
 		eval "incs=( ${includes[*]})"
 		eval "defs=( ${definitions[*]})"
 		for (( i=0; i<"$sizeFiles"; i++ )); do
@@ -61,19 +85,27 @@ verilatorEval() {
 			top=${topCollection[i]}
 			
 			begin=$(date '+%s%N')
-			SCC=$(${VERILATOR} --lint-only --stats --debug \
-								--Wwarn-ASSIGNIN --Wwarn-MODMISSING -Wno-fatal -Wno-ZEROREPL -Wno-PINNOTFOUND \
-								"${incs[@]}" \
-								"${defs[@]}" \
-								"${files[@]}" \
-								 | awk '/UnOptimized: Find [0-9]+ SCCs/ { sum = $4 } END { print sum + 0 }')
+			verilatorOutput=$(${VERILATOR} --lint-only --stats --debug \
+									--Wwarn-ASSIGNIN --Wwarn-MODMISSING -Wno-fatal -Wno-ZEROREPL -Wno-PINNOTFOUND \
+									"${incs[@]}" \
+									"${defs[@]}" \
+									"${files[@]}" 2>&1)
+			SCC=$(echo "$verilatorOutput" | awk '
+				/UnOptimized: Find [0-9]+ SCCs/ {
+					for (i = 1; i < NF; ++i) {
+						if ($i == "Find" && $(i + 1) ~ /^[0-9]+$/) {
+							sum += $(i + 1)
+						}
+					}
+				}
+				END { print sum + 0 }')
 
 			end=$(date '+%s%N')
 			consume=$(( (end - begin) / 1000000 ))
 			timeConsume=$(( timeConsume + consume ))
 
 			sccNum=$(( sccNum + SCC ))
-			report=$(printf "%s\n%s\t%s\t%d\t%d\t" "$report" "$top" "$project_name" "$SCC" "$consume")
+			report=$(printf "%s\n%s\t%s\t%d\t%d\t%d\t" "$report" "$top" "$project_name" "$SCC" "$consume" "$projectSourceLines")
 		done
 	done
 

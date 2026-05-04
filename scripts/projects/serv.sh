@@ -36,7 +36,10 @@ collectWithTop() {
 	done < <(find "." -name "*.v" -print0)
 
 	if (( ${#current_files[@]} > 0 )); then
-		tops+=("serv_top")
+		tops+=("serv_rf_top")
+		fileSets+=("$(printf "%q " "${current_files[@]}")")
+
+		tops+=("serv_synth_wrapper")
 		fileSets+=("$(printf "%q " "${current_files[@]}")")
 	fi
 	popd > /dev/null

@@ -57,6 +57,9 @@ for (( i=0; i<"${#args[@]}"; i+=1 )); do
 		"--projects")
 			contain_projects+=("$arg")
 			;;
+		"--project")
+			contain_projects+=("$arg")
+			;;
 		"--yosys")
 			yosys="$arg"
 			;;
@@ -193,17 +196,42 @@ convert_to_md() {
     fi
 
     local output_file="${REPORT_DIR}/eval-${suffix}.md"
+    local metric_header
+    metric_header=$(echo "$raw_data" | awk 'NF { print $3; exit }')
+    metric_header=${metric_header:-SCC}
+    local source_lines_header
+    source_lines_header=$(echo "$raw_data" | awk 'NF { print $5; exit }')
+    source_lines_header=${source_lines_header:-SourceFileLines}
     
     {
         echo "# ${title} Evaluation Report (${DATE})"
         echo ""
-        echo "| TopName | Project | SCC | Time (ms) |"
-        echo "| :--- | :--- | :---: | :---: |"
+        echo "| TopName | Project | ${metric_header} | Time (ms) | ${source_lines_header} |"
+        echo "| :--- | :--- | :---: | :---: | :---: |"
         
         echo "$raw_data" | awk '
         {
-            if ($1 == "TopName" || $1 == "") next;
-            printf("| %s | %s | %s | %s |\n", $1, $2, $3, $4);
+            if ($1 == "TopName" || NF < 5) next;
+            printf("| %s | %s | %s | %s | %s |\n", $1, $2, $3, $4, $5);
+            total_metric += $3 + 0;
+            total_time += $4 + 0;
+            row_count += 1;
+
+            if (!($2 in project_seen)) {
+                project_seen[$2] = 1;
+                project_count += 1;
+                total_project_source_lines += $5 + 0;
+            }
+        }
+        END {
+            if (row_count > 0) {
+                avg_time = project_count > 0 ? total_time / project_count : 0;
+                avg_source_lines = project_count > 0 ? total_project_source_lines / project_count : 0;
+                printf("| Total | %d entries | %d | %d | %d |\n", row_count, total_metric, total_time, total_project_source_lines);
+                printf("| Project Count | - | - | - | %d |\n", project_count);
+                printf("| Average Time | - | - | %.2f | - |\n", avg_time);
+                printf("| Average Source File lines | - | - | - | %.2f |\n", avg_source_lines);
+            }
         }'
     } > "$output_file"
     

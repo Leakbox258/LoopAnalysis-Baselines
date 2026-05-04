@@ -4,6 +4,28 @@ set -euo pipefail
 
 BUILD="./build"
 
+count_project_source_lines() {
+	local total_lines=0
+	local -A seen_files=()
+	local file_set
+
+	for file_set in "$@"; do
+		local files=()
+		eval "files=( ${file_set} )"
+
+		for file in "${files[@]}"; do
+			if [[ -n ${seen_files["$file"]+x} ]]; then
+				continue
+			fi
+
+			seen_files["$file"]=1
+			total_lines=$(( total_lines + $(wc -l < "$file") ))
+		done
+	done
+
+	printf "%d\n" "$total_lines"
+}
+
 printTestScope() {
 	SCRIPTS_PATH=$1
 	local -n projects=$2
@@ -22,7 +44,7 @@ yosysEval() {
 	local -n EVAL_PROJECT=$3
 	sccNum=0 # on netlist
 	timeConsume=0 # ms
-	report="TopName    Project    SCCNum    Time(ms)"
+	report="TopName    Project    SCCNum    Time(ms)    SourceFileLines"
 	
 	for boot in "${EVAL_PROJECT[@]}"; do
 		source "$boot"
@@ -55,6 +77,8 @@ yosysEval() {
 			echo "size of file collection don't match size of top collection"
 		fi
 
+		projectSourceLines=$(count_project_source_lines "${fileCollection[@]}")
+
 		quoted_includes=""
 		for inc in "${includes[@]}"; do
 			quoted_includes+=" \"$inc\""
@@ -70,6 +94,8 @@ yosysEval() {
 			top=${topCollection[i]}
 			
 			tmp_ys="${BUILD}/yosys/${project_name}_yosys_${top}_${i}.ys"
+			yosys_log="${BUILD}/yosys_out/${project_name}_yosys_${top}_${i}.out"
+			mkdir -p "${BUILD}/yosys" "${BUILD}/yosys_out"
 			touch "$tmp_ys"
 
 		{
@@ -87,7 +113,7 @@ yosysEval() {
 
 			echo "plugin -i ${BUILD}/slang.so"
 			echo "read_slang --ignore-timing ${definitions[*]} ${includes[*]} ${files[*]}"
-			echo "hierarchy -check -auto-top" # use -auto-top for an overall checking
+			echo "hierarchy -check -top ${top}"
 			echo "flatten" # https://github.com/YosysHQ/yosys/issues/3411
 			echo "scc"
 		} > "$tmp_ys"
@@ -95,8 +121,19 @@ yosysEval() {
 			begin=$(date "+%s%N")
 			
 			echo "Running Yosys script: $tmp_ys" 1>&2
-			yosysOutput=$(${YOSYS} -s "$tmp_ys" 2> /dev/null)
+			set +e
+			yosysOutput=$(${YOSYS} -s "$tmp_ys" 2>&1)
+			yosysStatus=$?
+			set -e
 			end=$(date "+%s%N")
+
+			printf "%s\n" "$yosysOutput" > "$yosys_log"
+
+			if [[ $yosysStatus -ne 0 ]]; then
+				echo "Yosys failed on project ${project_name}, top ${top}. See ${yosys_log}" 1>&2
+				echo "$yosysOutput" 1>&2
+				return "$yosysStatus"
+			fi
 
 			consume=$(( (end - begin) / 1000000 ))
 			yosysSCCNum=$(echo "$yosysOutput" | awk '/Found [0-9]+ SCCs in module/ {sum += $2} END {print sum+0}')
@@ -104,9 +141,7 @@ yosysEval() {
 			sccNum=$(( sccNum + yosysSCCNum ))
 			timeConsume=$(( timeConsume + consume ))
 
-			echo "$yosysOutput" > "${BUILD}/yosys_out/${project_name}_yosys_${top}_${i}.out"
-
-			report=$(printf "%s\n%s\t%s\t%d\t%d\t" "$report" "$top" "$project_name" "$yosysSCCNum" "$consume")
+			report=$(printf "%s\n%s\t%s\t%d\t%d\t%d\t" "$report" "$top" "$project_name" "$yosysSCCNum" "$consume" "$projectSourceLines")
 		done
 	done
 

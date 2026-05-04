@@ -37,7 +37,7 @@ collectWithTop() {
 	done < <(find "." -name "*.v" -print0)
 
 	if (( ${#current_files[@]} > 0 )); then
-		tops+=("riscv")
+		tops+=("riscv_core")
 		fileSets+=("$(printf "%q " "${current_files[@]}")")
 	fi
 

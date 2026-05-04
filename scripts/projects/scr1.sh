@@ -33,7 +33,7 @@ VERILOG_FILES=(
 	top/scr1_timer.sv
 	top/scr1_dmem_ahb.sv
 	top/scr1_imem_ahb.sv
-	top/scr1_top_ahb.sv
+	top/scr1_top_ahb.sv	
 	)
 
 qualify() {
@@ -67,16 +67,22 @@ collectWithTop() {
     for hdl in "${VERILOG_FILES[@]}"; do
         local abs_file="${SRC_ROOT}/${hdl}"
         
-        if [[ -f "$abs_file" && "$(wc -c < "$abs_file")" -gt 1 ]]; then
-            current_files+=("$abs_file")
-        fi
+		file_name=$(basename "$abs_file")
+
+		if [[ -f "$abs_file" && "$(wc -c < "$abs_file")" -gt 1 ]] \
+			&& [[ ! "$file_name" =~ (^|[_-])tb([._-]|$) ]] \
+			&& [[ ! "$file_name" =~ testbench ]]; then
+			current_files+=("$abs_file")
+		fi
     done
 
     if (( ${#current_files[@]} > 0 )); then
-        tops+=("scr1_core_top")
-        
+        tops+=("scr1_top_ahb")
         fileSets+=("$(printf "%q " "${current_files[@]}")")
-        
+
+		# tops+=("scr1_top_axi")        
+        # fileSets+=("$(printf "%q " "${current_files[@]}")")
+
         defs+=("-DSCR1_CFG_RV32IMC_MAX")
         incs+=("-I${SRC_ROOT}/includes")
     fi

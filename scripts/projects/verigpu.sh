@@ -74,7 +74,7 @@ collectWithTop() {
     ABS_TARGET=$(realpath "build/verigpu.sv")
 
     if [[ -f "$ABS_TARGET" && "$(wc -c < "$ABS_TARGET")" -gt 1 ]]; then
-        tops+=("core")
+        tops+=("gpu_card")
 
         fileSets+=("$(printf "%q " "$ABS_TARGET")")
     else

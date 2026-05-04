@@ -38,7 +38,7 @@ collectWithTop() {
 	done < <(find "." -name "*.v" -print0)
 	
 	if (( ${#current_files[@]} > 0 )); then
-		tops+=("e203_cpu_top")
+		tops+=("e203_soc_top")
 		fileSets+=("$(printf "%q " "${current_files[@]}")")
 		defs+=("-DFPGA_SOURCE")
 		incs+=("-I$(realpath "core")")

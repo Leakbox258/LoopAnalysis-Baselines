@@ -5,6 +5,28 @@ set -euo pipefail
 BUILD="./build"
 PYTHON3=/usr/bin/python3
 
+count_project_source_lines() {
+	local total_lines=0
+	local -A seen_files=()
+	local file_set
+
+	for file_set in "$@"; do
+		local files=()
+		eval "files=( ${file_set} )"
+
+		for file in "${files[@]}"; do
+			if [[ -n ${seen_files["$file"]+x} ]]; then
+				continue
+			fi
+
+			seen_files["$file"]=1
+			total_lines=$(( total_lines + $(wc -l < "$file") ))
+		done
+	done
+
+	printf "%d\n" "$total_lines"
+}
+
 printTestScope() {
 	SCRIPTS_PATH=$1
 	local -n projects=$2
@@ -25,7 +47,7 @@ wireSortEval() {
 	declare -n EVAL_PROJECT=$5
 	badConnectionNum=0 # module-port level
 	timeConsume=0 # ms
-	report="TopName    Project    BadConn    Time(ms)"
+	report="TopName    Project    BadConn    Time(ms)    SourceFileLines"
 
 	for boot in "${EVAL_PROJECT[@]}"; do
 		source "$boot"
@@ -57,6 +79,8 @@ wireSortEval() {
 		if [ "$sizeFiles" -ne "$sizeTops" ]; then
 			echo "size of file collection don't match size of top collection"
 		fi
+
+		projectSourceLines=$(count_project_source_lines "${fileCollection[@]}")
 
 		quoted_includes=""
 		for inc in "${includes[@]}"; do
@@ -120,7 +144,7 @@ wireSortEval() {
 
 			badConnectionNum=$(( badConnectionNum + badConnections ))
 			timeConsume=$(( timeConsume + consume ))
-			report=$(printf "%s\n%s\t%s\t%d\t%d\t" "$report" "$top" "$project_name" "$badConnections" "$consume")
+			report=$(printf "%s\n%s\t%s\t%d\t%d\t%d\t" "$report" "$top" "$project_name" "$badConnections" "$consume" "$projectSourceLines")
 		done
 	done
 
