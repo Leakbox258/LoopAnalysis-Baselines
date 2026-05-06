@@ -109,6 +109,7 @@ mkdir -p build/yosys
 verilatorReport=""
 wireSortReport=""
 yosysReport=""
+yosysNetListReport=""
 
 for mode in "${modes[@]}"; do
 
@@ -136,11 +137,18 @@ for mode in "${modes[@]}"; do
 									EVAL_PROJECTS
 									)
 			;;
+		"eval-yosys-netlist")
+			source ./scripts/yosys-netlist.sh
+			yosysNetListReport+=$(yosysNetListEval "$yosys" \
+									"$PROJECTS" \
+									EVAL_PROJECTS
+									)
+			;;
 		"eval-all")
 			source ./scripts/verilator5.0.sh
 			source ./scripts/wireSort.sh
 			source ./scripts/yosys.sh
-
+			source ./scripts/yosys-netlist.sh
 			verilatorReport+=$(verilatorEval "$VERILATOR"\
 											 "$PROJECTS" \
 											 EVAL_PROJECTS
@@ -152,6 +160,10 @@ for mode in "${modes[@]}"; do
 											EVAL_PROJECTS
 											)
 			yosysReport+=$(yosysEval "$yosys" \
+									"$PROJECTS" \
+									EVAL_PROJECTS
+									)
+			yosysNetListReport+=$(yosysEval "$yosys" \
 									"$PROJECTS" \
 									EVAL_PROJECTS
 									)
@@ -220,7 +232,6 @@ convert_to_md() {
             if (!($2 in project_seen)) {
                 project_seen[$2] = 1;
                 project_count += 1;
-                total_project_source_lines += $5 + 0;
             }
         }
         END {
@@ -249,10 +260,14 @@ for mode in "${modes[@]}"; do
         "eval-yosys")
             convert_to_md "$yosysReport" "Yosys" "yosys"
             ;;
+		"eval-yosys-netlist")
+            convert_to_md "$yosysNetListReport" "YosysNetList" "yosysNetList"
+            ;;
         "eval-all")
             convert_to_md "$verilatorReport" "Verilator" "verilator"
             convert_to_md "$wireSortReport" "WireSort" "wiresort"
             convert_to_md "$yosysReport" "Yosys" "yosys"
+            convert_to_md "$yosysNetListReport" "YosysNetList" "yosysNetList"
             ;;
         *)
     esac

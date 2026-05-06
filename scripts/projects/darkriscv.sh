@@ -30,6 +30,10 @@ qualify() {
 	esac
 }
 
+collectWithTopVerilator() {
+    collectWithTop "$1" "$2" "$3" "$4" "$5"
+}
+
 collectWithTop() {
 	local PROJECTS=$1
 	local -n fileSets=$2

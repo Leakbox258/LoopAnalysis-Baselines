@@ -7,21 +7,10 @@ PYTHON3=/usr/bin/python3
 
 count_project_source_lines() {
 	local total_lines=0
-	local -A seen_files=()
-	local file_set
+	local file
 
-	for file_set in "$@"; do
-		local files=()
-		eval "files=( ${file_set} )"
-
-		for file in "${files[@]}"; do
-			if [[ -n ${seen_files["$file"]+x} ]]; then
-				continue
-			fi
-
-			seen_files["$file"]=1
-			total_lines=$(( total_lines + $(wc -l < "$file") ))
-		done
+	for file in "$@"; do
+		total_lines=$(( total_lines + $(wc -l < "$file") ))
 	done
 
 	printf "%d\n" "$total_lines"
@@ -80,8 +69,6 @@ wireSortEval() {
 			echo "size of file collection don't match size of top collection"
 		fi
 
-		projectSourceLines=$(count_project_source_lines "${fileCollection[@]}")
-
 		quoted_includes=""
 		for inc in "${includes[@]}"; do
 			quoted_includes+=" \"$inc\""
@@ -95,6 +82,7 @@ wireSortEval() {
 		for (( i=0; i<"$sizeFiles"; i++ )); do
             eval "files=( ${fileCollection[$i]} )"
             top=${topCollection[i]}
+            projectSourceLines=$(count_project_source_lines "${files[@]}")
             blif="${BUILD}/blif/${project_name}_${top}.blif"
             tmp_ys="${BUILD}/yosys/${project_name}_blifgen_${top}.ys"
 

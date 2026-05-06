@@ -20,6 +20,22 @@ qualify() {
 	esac
 }
 
+collectWithTopVerilator() {
+	local PROJECTS=$1
+	local -n fileSets=$2
+	local -n tops=$3
+
+	local TARGET_FILE=$(realpath "${PROJECTS}/${PROJECT_NAME}/picorv32.v")
+	
+	if [[ -f "$TARGET_FILE" && "$(wc -c < "$TARGET_FILE")" -gt 1 ]]; then
+		local current_file_set
+		current_file_set=$(printf "%q " "$TARGET_FILE")
+
+		tops+=("picorv32")
+		fileSets+=("$current_file_set")
+	fi
+}
+
 collectWithTop() {
 	local PROJECTS=$1
 	local -n fileSets=$2

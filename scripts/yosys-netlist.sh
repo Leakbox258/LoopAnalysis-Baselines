@@ -27,7 +27,7 @@ printTestScope() {
 	done
 }
 
-yosysEval() {
+yosysNetListEval() {
 	YOSYS=$1
 	PROJECTS_PATH=$2
 	local -n EVAL_PROJECT=$3
@@ -81,9 +81,9 @@ yosysEval() {
 			top=${topCollection[i]}
 			projectSourceLines=$(count_project_source_lines "${files[@]}")
 			
-			tmp_ys="${BUILD}/yosys/${project_name}_yosys_${top}_${i}.ys"
-			yosys_log="${BUILD}/yosys_out/${project_name}_yosys_${top}_${i}.out"
-			mkdir -p "${BUILD}/yosys" "${BUILD}/yosys_out"
+			tmp_ys="${BUILD}/yosys_netlist/${project_name}_yosys_netlist_${top}_${i}.ys"
+			yosys_log="${BUILD}/yosys_out_netlist/${project_name}_yosys_netlist_${top}_${i}.out"
+			mkdir -p "${BUILD}/yosys_netlist" "${BUILD}/yosys_out_netlist"
 			touch "$tmp_ys"
 
 		{
@@ -101,8 +101,8 @@ yosysEval() {
 
 			echo "plugin -i ${BUILD}/slang.so"
 			echo "read_slang --ignore-timing ${definitions[*]} ${includes[*]} ${files[*]}"
-			echo "hierarchy -check -top ${top}"
-			echo "flatten" # https://github.com/YosysHQ/yosys/issues/3411
+			echo "synth -top ${top} -noabc"
+			# echo "flatten" # https://github.com/YosysHQ/yosys/issues/3411
 			echo "scc"
 		} > "$tmp_ys"
 
