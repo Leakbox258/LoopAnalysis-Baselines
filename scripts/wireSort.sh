@@ -34,6 +34,8 @@ wireSortEval() {
 	YOSYS=$3
 	PROJECTS_PATH=$4
 	declare -n EVAL_PROJECT=$5
+	local blif_only=${6:-false}
+	blif_only=${blif_only,,}
 	badConnectionNum=0 # module-port level
 	timeConsume=0 # ms
 	report="TopName    Project    BadConn    Time(ms)    SourceFileLines"
@@ -82,11 +84,11 @@ wireSortEval() {
 		for (( i=0; i<"$sizeFiles"; i++ )); do
             eval "files=( ${fileCollection[$i]} )"
             top=${topCollection[i]}
-            projectSourceLines=$(count_project_source_lines "${files[@]}")
             blif="${BUILD}/blif/${project_name}_${top}.blif"
             tmp_ys="${BUILD}/yosys/${project_name}_blifgen_${top}.ys"
+            yosys_log="${BUILD}/yosys_out_blif/${project_name}_blifgen_${top}.out"
 
-            mkdir -p "${BUILD}/blif" "${BUILD}/yosys"
+            mkdir -p "${BUILD}/blif" "${BUILD}/yosys" "${BUILD}/yosys_out_blif"
 
             {
                 # echo "plugin -i ${BUILD}/slang.so"
@@ -116,11 +118,27 @@ wireSortEval() {
 
             if [[ ! -f $blif ]]; then
                 printf "Generating Single BLIF for %s ...\n" "${top}" 1>&2
-                ${YOSYS} -q -s "$tmp_ys" 2> /dev/null
+				set +e
+				yosysOutput=$(${YOSYS} -q -s "$tmp_ys" 2>&1)
+				yosysStatus=$?
+				set -e
+
+				printf "%s\n" "$yosysOutput" > "$yosys_log"
+
+				if [[ $yosysStatus -ne 0 ]]; then
+					echo "BLIF generation failed on project ${project_name}, top ${top}. See ${yosys_log}" 1>&2
+					echo "$yosysOutput" 1>&2
+					return "$yosysStatus"
+				fi
             else
                 printf "Found BLIF for %s, skipping...\n" "${top}" 1>&2
             fi
-        
+
+			if [[ "$blif_only" == "1" || "$blif_only" == "true" || "$blif_only" == "yes" ]]; then
+				continue
+			fi
+
+			projectSourceLines=$(count_project_source_lines "${files[@]}")
 
 			wireSortOutput=$(${PYTHON3} "${WIRE_SORT_SCRIPT}" \
 										"${PYRTL_PACKAGE_PATH}" "${blif}")
@@ -137,6 +155,10 @@ wireSortEval() {
 	done
 
 	# printf "Wire Sort find %d bad connections in %d ms\n" "$badConnectionNum" "$timeConsume"
+
+	if [[ "$blif_only" == "1" || "$blif_only" == "true" || "$blif_only" == "yes" ]]; then
+		return 0
+	fi
 
 	printf "%s\n" "$report"
 }

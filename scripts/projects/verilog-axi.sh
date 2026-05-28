@@ -12,7 +12,7 @@ qualify() {
 			return 0
 			;;
 		"eval-wiresort")
-			return 1
+			return 0
 			;;
 		"eval-yosys")
 			return 0

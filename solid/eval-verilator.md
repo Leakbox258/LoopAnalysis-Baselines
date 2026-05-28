@@ -1,155 +1,156 @@
-# Verilator Evaluation Report (2026-05-05-12-08)
+# Verilator Evaluation Report (2026-05-22-18-18)
 
-| TopName                                                           | Project                  |  SCC  | Time (ms) | SourceFileLines |
-| :---------------------------------------------------------------- | :----------------------- | :---: | :-------: | :-------------: |
-| CRC_16_parallel                                                   | 32-Verilog-Mini-Projects |   0   |    197    |       84        |
-| CRC_16_serial                                                     | 32-Verilog-Mini-Projects |   0   |    111    |       71        |
-| CRC_32_parallel                                                   | 32-Verilog-Mini-Projects |   0   |    264    |       133       |
-| CRC_32_serial                                                     | 32-Verilog-Mini-Projects |   0   |    107    |       63        |
-| Carry_Select_and_Carry_Look_Ahead_Adder                           | 32-Verilog-Mini-Projects |   0   |    343    |       214       |
-| Carry_Skip_and_Carry_Save_Adder                                   | 32-Verilog-Mini-Projects |   0   |    327    |       186       |
-| Complex_Multiplier                                                | 32-Verilog-Mini-Projects |   0   |    106    |       46        |
-| FIFO                                                              | 32-Verilog-Mini-Projects |   0   |    101    |       110       |
-| Fixed_Point_Adder_and_Subtractor                                  | 32-Verilog-Mini-Projects |   0   |    128    |       228       |
-| Fixed_Point_Multiplier_and_Divider                                | 32-Verilog-Mini-Projects |   0   |    161    |       224       |
-| Floating_Point_IEEE_754_Addition_Subtraction                      | 32-Verilog-Mini-Projects |   0   |    369    |       343       |
-| Floating_Point_IEEE_754_Division                                  | 32-Verilog-Mini-Projects |   0   |    577    |       417       |
-| Floating_Point_IEEE_754_Multiplication                            | 32-Verilog-Mini-Projects |   0   |    227    |       92        |
-| Fraction_Multiplier                                               | 32-Verilog-Mini-Projects |   0   |    102    |       75        |
-| High_Radix_Multiplier                                             | 32-Verilog-Mini-Projects |   0   |    114    |       140       |
-| I2C                                                               | 32-Verilog-Mini-Projects |   0   |    133    |       158       |
-| SPI                                                               | 32-Verilog-Mini-Projects |   0   |    190    |       391       |
-| CFSR                                                              | 32-Verilog-Mini-Projects |   0   |    108    |       48        |
-| LFSR                                                              | 32-Verilog-Mini-Projects |   0   |    101    |       17        |
-| Logarithm_Implementation                                          | 32-Verilog-Mini-Projects |   0   |    119    |       22        |
-| Mealy_and_Moore_State_Machine_Implementation_of_Sequence_Detector | 32-Verilog-Mini-Projects |   0   |    145    |       146       |
-| Modified_Booth_Algorithm                                          | 32-Verilog-Mini-Projects |   0   |    123    |       67        |
-| Pipelined_Multiplier                                              | 32-Verilog-Mini-Projects |   0   |    179    |       172       |
-| Restoring_and_Non_Restoring_Division                              | 32-Verilog-Mini-Projects |   0   |    808    |       303       |
-| Sequential_Multiplier                                             | 32-Verilog-Mini-Projects |   0   |    147    |       140       |
-| Shift_and_Add_Binary_Multiplier                                   | 32-Verilog-Mini-Projects |   0   |    149    |       190       |
-| Traffic_Light_Controller                                          | 32-Verilog-Mini-Projects |   0   |    143    |       100       |
-| Universal_Shift_Register                                          | 32-Verilog-Mini-Projects |   0   |    148    |       61        |
-| dual_address_ram                                                  | 32-Verilog-Mini-Projects |   0   |    109    |       92        |
-| dual_address_rom                                                  | 32-Verilog-Mini-Projects |   0   |    134    |       104       |
-| Booth_Multiplication                                              | 32-Verilog-Mini-Projects |   0   |   1013    |       243       |
-| bcd_adder                                                         | 32-Verilog-Mini-Projects |   0   |    98     |       55        |
-| Barrel_Shifter                                                    | 32-Verilog-Mini-Projects |   0   |    147    |       44        |
-| Array_Multiplier                                                  | 32-Verilog-Mini-Projects |   0   |    393    |       101       |
-| 32_bit_adder                                                      | 32-Verilog-Mini-Projects |   0   |    86     |       12        |
-| riscv_top                                                         | biriscv                  |   0   |   6797    |      13601      |
-| darksocv                                                          | darkriscv                |   0   |    469    |      2877       |
-| e203_soc_top                                                      | e203                     |   0   |   28278   |      56409      |
-| hazard3_cpu_1port                                                 | hazard3                  |   0   |   7773    |      8368       |
-| hazard3_cpu_2port                                                 | hazard3                  |   0   |   7819    |      8368       |
-| ad463x_data_capture                                               | hdl                      |   0   |    119    |       131       |
-| axi_ad35xxr                                                       | hdl                      |   0   |   1561    |      1158       |
-| axi_ad408x                                                        | hdl                      |   0   |    773    |       762       |
-| axi_ad485x                                                        | hdl                      |   0   |   2693    |      2554       |
-| axi_ad5766                                                        | hdl                      |   0   |    645    |       710       |
-| axi_ad7405                                                        | hdl                      |   0   |    653    |       311       |
-| axi_ad7606x                                                       | hdl                      |   0   |   3815    |      1381       |
-| axi_ad7616                                                        | hdl                      |   0   |   3333    |       788       |
-| axi_ad7768                                                        | hdl                      |   0   |   3343    |       854       |
-| axi_ad777x                                                        | hdl                      |   0   |   2392    |       740       |
-| axi_ad9122                                                        | hdl                      |   0   |   2566    |       976       |
-| axi_ad9250                                                        | hdl                      |   0   |    107    |       141       |
-| axi_ad9265                                                        | hdl                      |   0   |    775    |       849       |
-| axi_ad9361                                                        | hdl                      |   0   |   5015    |      2963       |
-| axi_ad9361_intel                                                  | hdl                      |   0   |    246    |      1754       |
-| axi_ad9361_xilinx                                                 | hdl                      |   0   |    227    |      1233       |
-| axi_ad9434                                                        | hdl                      |   0   |    849    |       950       |
-| axi_ad9467                                                        | hdl                      |   0   |    766    |       842       |
-| axi_ad9625                                                        | hdl                      |   0   |   1706    |      1196       |
-| axi_ad9671                                                        | hdl                      |   0   |   2597    |       877       |
-| axi_ad9684                                                        | hdl                      |   0   |   1100    |       951       |
-| axi_ad9739a                                                       | hdl                      |   0   |   1482    |       896       |
-| axi_ad9783                                                        | hdl                      |   0   |   1266    |       840       |
-| axi_ad9963                                                        | hdl                      |   0   |   2279    |      1773       |
-| axi_ada4355                                                       | hdl                      |   0   |    754    |       872       |
-| axi_adaq8092                                                      | hdl                      |   0   |   1031    |       995       |
-| axi_adc_decimate                                                  | hdl                      |   0   |    440    |       989       |
-| axi_adc_trigger                                                   | hdl                      |   0   |    444    |       933       |
-| axi_adrv9001                                                      | hdl                      |  48   |   8541    |      5913       |
-| axi_adrv9001_intel                                                | hdl                      |   0   |    155    |       296       |
-| axi_clkgen                                                        | hdl                      |   0   |    224    |       222       |
-| axi_clock_monitor                                                 | hdl                      |   0   |    228    |       302       |
-| axi_dac_interpolate                                               | hdl                      |   0   |    799    |      1851       |
-| axi_dmac                                                          | hdl                      |   0   |   1200    |      8076       |
-| axi_dmac_tb                                                       | hdl                      |   0   |    178    |       357       |
-| axi_fan_control                                                   | hdl                      |   0   |    334    |       768       |
-| axi_fmcadc5_sync                                                  | hdl                      |   0   |    970    |      1145       |
-| axi_generic_adc                                                   | hdl                      |   0   |    748    |       269       |
-| axi_gpreg                                                         | hdl                      |   0   |    680    |       604       |
-| axi_hdmi_rx                                                       | hdl                      |   0   |    527    |       773       |
-| axi_hdmi_tx                                                       | hdl                      |   0   |    822    |      1299       |
-| axi_intr_monitor                                                  | hdl                      |   0   |    197    |       221       |
-| axi_laser_driver                                                  | hdl                      |   0   |    279    |       584       |
-| axi_logic_analyzer                                                | hdl                      |   0   |    717    |      1042       |
-| axi_ltc235x                                                       | hdl                      |   0   |   1965    |      1448       |
-| axi_ltc2387                                                       | hdl                      |   0   |    690    |       787       |
-| axi_pulsar_lvds                                                   | hdl                      |   0   |    659    |       634       |
-| axi_pulse_gen                                                     | hdl                      |   0   |    195    |       347       |
-| axi_pwm_gen                                                       | hdl                      |   0   |    131    |       208       |
-| axi_rd_wr_combiner                                                | hdl                      |   0   |    114    |       159       |
-| axi_sysid                                                         | hdl                      |   0   |    168    |       171       |
-| cn0363_cn0363_dma_sequencer                                       | hdl                      |   0   |    154    |       197       |
-| cn0363_cn0363_phase_data_sync                                     | hdl                      |   0   |    148    |       166       |
-| common                                                            | hdl                      |   2   |   3622    |      10522      |
-| cordic_demod                                                      | hdl                      |   0   |    136    |       205       |
-| data_offload                                                      | hdl                      |   0   |    285    |      1113       |
-| i3c_controller_i3c_controller_core                                | hdl                      |   0   |    349    |      1302       |
-| i3c_controller_i3c_controller_host_interface                      | hdl                      |   0   |    448    |      1566       |
-| spi_engine_axi_spi_engine                                         | hdl                      |   0   |    243    |       661       |
-| spi_engine_spi_axis_reorder                                       | hdl                      |   0   |    85     |       140       |
-| spi_engine_spi_engine_execution                                   | hdl                      |   0   |    243    |       815       |
-| spi_engine_spi_engine_interconnect                                | hdl                      |   0   |    120    |       121       |
-| spi_engine_spi_engine_offload                                     | hdl                      |   0   |    154    |       348       |
-| sysid_rom                                                         | hdl                      |   0   |    94     |       57        |
-| util_adcfifo                                                      | hdl                      |   0   |    216    |       253       |
-| util_axis_fifo                                                    | hdl                      |   0   |    159    |       535       |
-| util_axis_fifo_asym                                               | hdl                      |   0   |    132    |       327       |
-| util_axis_resize                                                  | hdl                      |   0   |    100    |       163       |
-| util_bsplit                                                       | hdl                      |   0   |    116    |       76        |
-| util_cdc                                                          | hdl                      |   0   |    141    |       409       |
-| util_cic                                                          | hdl                      |   0   |    233    |       205       |
-| util_dacfifo                                                      | hdl                      |   0   |    275    |       603       |
-| util_do_ram                                                       | hdl                      |   0   |    176    |       333       |
-| util_extract                                                      | hdl                      |   0   |    116    |       81        |
-| util_fir_dec                                                      | hdl                      |   0   |    106    |       67        |
-| util_fir_int                                                      | hdl                      |   0   |    125    |       79        |
-| util_gmii_to_rgmii                                                | hdl                      |   0   |    149    |       439       |
-| util_hbm                                                          | hdl                      |   0   |   2418    |       645       |
-| util_mfifo                                                        | hdl                      |   0   |    201    |       272       |
-| util_mii_to_rmii                                                  | hdl                      |   0   |    182    |       610       |
-| util_pack_util_cpack2                                             | hdl                      |   0   |    183    |       444       |
-| util_pack_util_pack_common                                        | hdl                      |   0   |    278    |       878       |
-| util_pack_util_upack2                                             | hdl                      |   0   |    179    |       444       |
-| util_pad                                                          | hdl                      |   0   |    96     |       83        |
-| util_rfifo                                                        | hdl                      |   0   |    220    |       405       |
-| util_sigma_delta_spi                                              | hdl                      |   0   |    104    |       111       |
-| util_tdd_sync                                                     | hdl                      |   0   |    115    |       98        |
-| util_var_fifo                                                     | hdl                      |   0   |    135    |       170       |
-| util_wfifo                                                        | hdl                      |   0   |    200    |       343       |
-| xilinx_axi_adxcvr                                                 | hdl                      |   0   |   2509    |      5764       |
-| xilinx_axi_dacfifo                                                | hdl                      |   0   |    548    |      1411       |
-| xilinx_axi_xcvrlb                                                 | hdl                      |   0   |    279    |       545       |
-| xilinx_common                                                     | hdl                      |   0   |    197    |      2060       |
-| xilinx_util_adxcvr                                                | hdl                      |   0   |   1430    |      12202      |
-| xilinx_util_clkdiv                                                | hdl                      |   0   |    88     |       97        |
-| hdmi                                                              | hdmi                     |   0   |    859    |      1504       |
-| picorv32                                                          | picorv32                 |   0   |    897    |      3049       |
-| riffa                                                             | riffa                    |  64   |   46271   |      17281      |
-| riscv_core                                                        | riscv                    |   0   |   1738    |      6832       |
-| scr1_top_ahb                                                      | scr1                     |   0   |   4062    |      14207      |
-| serv_top                                                          | serv                     |   0   |    857    |      3461       |
-| gpu                                                               | tiny-gpu                 |   0   |   1086    |      1341       |
-| gpu_card                                                          | verigpu                  |   0   |   6075    |      6160       |
-| verilog-axi                                                       | verilog-axi              |   8   |   12425   |      15866      |
-| verilog-pcie                                                      | verilog-pcie             |   0   |   15214   |      30018      |
-| vortex                                                            | vortex                   |   0   |   1273    |      3471       |
-| zipcpu                                                            | zipcpu                   |   0   |   5433    |      48370      |
-| Total                                                             | 147 entries              |  122  |  236018   |     350335      |
-| Project Count                                                     | -                        |   -   |     -     |       18        |
-| Average Time                                                      | -                        |   -   | 13112.11  |        -        |
-| Average Source File lines                                         | -                        |   -   |     -     |     2383.23     |
+| TopName                                                           | Project                  |  SCC  | Time (ms) | Algorithm Time (ms) | SourceFileLines |
+| :---------------------------------------------------------------- | :----------------------- | :---: | :-------: | :-----------------: | :-------------: |
+| CRC_16_parallel                                                   | 32-Verilog-Mini-Projects |   0   |    149    |          0          |       84        |
+| CRC_16_serial                                                     | 32-Verilog-Mini-Projects |   0   |    114    |          0          |       71        |
+| CRC_32_parallel                                                   | 32-Verilog-Mini-Projects |   0   |    242    |          0          |       133       |
+| CRC_32_serial                                                     | 32-Verilog-Mini-Projects |   0   |    121    |          0          |       63        |
+| Carry_Select_and_Carry_Look_Ahead_Adder                           | 32-Verilog-Mini-Projects |   0   |    333    |          0          |       214       |
+| Carry_Skip_and_Carry_Save_Adder                                   | 32-Verilog-Mini-Projects |   0   |    307    |          0          |       186       |
+| Complex_Multiplier                                                | 32-Verilog-Mini-Projects |   0   |    129    |          0          |       46        |
+| FIFO                                                              | 32-Verilog-Mini-Projects |   0   |    110    |          0          |       110       |
+| Fixed_Point_Adder_and_Subtractor                                  | 32-Verilog-Mini-Projects |   0   |    125    |          0          |       228       |
+| Fixed_Point_Multiplier_and_Divider                                | 32-Verilog-Mini-Projects |   0   |    164    |          0          |       224       |
+| Floating_Point_IEEE_754_Addition_Subtraction                      | 32-Verilog-Mini-Projects |   0   |    376    |          0          |       343       |
+| Floating_Point_IEEE_754_Division                                  | 32-Verilog-Mini-Projects |   0   |    625    |          0          |       417       |
+| Floating_Point_IEEE_754_Multiplication                            | 32-Verilog-Mini-Projects |   0   |    249    |          0          |       92        |
+| Fraction_Multiplier                                               | 32-Verilog-Mini-Projects |   0   |    115    |          0          |       75        |
+| High_Radix_Multiplier                                             | 32-Verilog-Mini-Projects |   0   |    122    |          0          |       140       |
+| I2C                                                               | 32-Verilog-Mini-Projects |   0   |    155    |          0          |       158       |
+| SPI                                                               | 32-Verilog-Mini-Projects |   0   |    152    |          0          |       391       |
+| CFSR                                                              | 32-Verilog-Mini-Projects |   0   |    115    |          0          |       48        |
+| LFSR                                                              | 32-Verilog-Mini-Projects |   0   |    109    |          0          |       17        |
+| Logarithm_Implementation                                          | 32-Verilog-Mini-Projects |   0   |    126    |          0          |       22        |
+| Mealy_and_Moore_State_Machine_Implementation_of_Sequence_Detector | 32-Verilog-Mini-Projects |   0   |    142    |          0          |       146       |
+| Modified_Booth_Algorithm                                          | 32-Verilog-Mini-Projects |   0   |    131    |          0          |       67        |
+| Pipelined_Multiplier                                              | 32-Verilog-Mini-Projects |   0   |    156    |          0          |       172       |
+| Restoring_and_Non_Restoring_Division                              | 32-Verilog-Mini-Projects |   0   |    820    |          0          |       303       |
+| Sequential_Multiplier                                             | 32-Verilog-Mini-Projects |   0   |    138    |          0          |       140       |
+| Shift_and_Add_Binary_Multiplier                                   | 32-Verilog-Mini-Projects |   0   |    142    |          0          |       190       |
+| Traffic_Light_Controller                                          | 32-Verilog-Mini-Projects |   0   |    145    |          0          |       100       |
+| Universal_Shift_Register                                          | 32-Verilog-Mini-Projects |   0   |    147    |          0          |       61        |
+| dual_address_ram                                                  | 32-Verilog-Mini-Projects |   0   |    125    |          0          |       92        |
+| dual_address_rom                                                  | 32-Verilog-Mini-Projects |   0   |    137    |          0          |       104       |
+| Booth_Multiplication                                              | 32-Verilog-Mini-Projects |   0   |   1069    |          0          |       243       |
+| bcd_adder                                                         | 32-Verilog-Mini-Projects |   0   |    106    |          0          |       55        |
+| Barrel_Shifter                                                    | 32-Verilog-Mini-Projects |   0   |    143    |          0          |       44        |
+| Array_Multiplier                                                  | 32-Verilog-Mini-Projects |   0   |    387    |          0          |       101       |
+| 32_bit_adder                                                      | 32-Verilog-Mini-Projects |   0   |    102    |          0          |       12        |
+| riscv_top                                                         | biriscv                  |   0   |   7216    |          0          |      13601      |
+| darksocv                                                          | darkriscv                |   0   |    431    |          0          |      2877       |
+| e203_soc_top                                                      | e203                     |   0   |   28706   |          0          |      56409      |
+| hazard3_cpu_1port                                                 | hazard3                  |   0   |   8247    |          0          |      8368       |
+| hazard3_cpu_2port                                                 | hazard3                  |   0   |   8074    |          0          |      8368       |
+| ad463x_data_capture                                               | hdl                      |   0   |    112    |          0          |       131       |
+| axi_ad35xxr                                                       | hdl                      |   0   |   1667    |          0          |      1158       |
+| axi_ad408x                                                        | hdl                      |   0   |    807    |          0          |       762       |
+| axi_ad485x                                                        | hdl                      |   0   |   3035    |          0          |      2554       |
+| axi_ad5766                                                        | hdl                      |   0   |    675    |          0          |       710       |
+| axi_ad7405                                                        | hdl                      |   0   |    661    |          0          |       311       |
+| axi_ad7606x                                                       | hdl                      |   0   |   3406    |          0          |      1381       |
+| axi_ad7616                                                        | hdl                      |   0   |   3433    |          0          |       788       |
+| axi_ad7768                                                        | hdl                      |   0   |   3459    |          0          |       854       |
+| axi_ad777x                                                        | hdl                      |   0   |   2335    |          0          |       740       |
+| axi_ad9122                                                        | hdl                      |   0   |   2721    |          0          |       976       |
+| axi_ad9250                                                        | hdl                      |   0   |    121    |          0          |       141       |
+| axi_ad9265                                                        | hdl                      |   0   |    848    |          0          |       849       |
+| axi_ad9361                                                        | hdl                      |   0   |   5072    |          0          |      2963       |
+| axi_ad9361_intel                                                  | hdl                      |   0   |    261    |          0          |      1754       |
+| axi_ad9361_xilinx                                                 | hdl                      |   0   |    221    |          0          |      1233       |
+| axi_ad9434                                                        | hdl                      |   0   |    855    |          0          |       950       |
+| axi_ad9467                                                        | hdl                      |   0   |    777    |          0          |       842       |
+| axi_ad9625                                                        | hdl                      |   0   |   1727    |          0          |      1196       |
+| axi_ad9671                                                        | hdl                      |   0   |   2704    |          0          |       877       |
+| axi_ad9684                                                        | hdl                      |   0   |   1183    |          0          |       951       |
+| axi_ad9739a                                                       | hdl                      |   0   |   1442    |          0          |       896       |
+| axi_ad9783                                                        | hdl                      |   0   |   1240    |          0          |       840       |
+| axi_ad9963                                                        | hdl                      |   0   |   2250    |          0          |      1773       |
+| axi_ada4355                                                       | hdl                      |   0   |    709    |          0          |       872       |
+| axi_adaq8092                                                      | hdl                      |   0   |   1121    |          0          |       995       |
+| axi_adc_decimate                                                  | hdl                      |   0   |    442    |          0          |       989       |
+| axi_adc_trigger                                                   | hdl                      |   0   |    435    |          0          |       933       |
+| axi_adrv9001                                                      | hdl                      |  48   |   9099    |          0          |      5913       |
+| axi_adrv9001_intel                                                | hdl                      |   0   |    162    |          0          |       296       |
+| axi_clkgen                                                        | hdl                      |   0   |    216    |          0          |       222       |
+| axi_clock_monitor                                                 | hdl                      |   0   |    240    |          0          |       302       |
+| axi_dac_interpolate                                               | hdl                      |   0   |    864    |          0          |      1851       |
+| axi_dmac                                                          | hdl                      |   0   |   1323    |          0          |      8076       |
+| axi_dmac_tb                                                       | hdl                      |   0   |    174    |          0          |       357       |
+| axi_fan_control                                                   | hdl                      |   0   |    369    |          0          |       768       |
+| axi_fmcadc5_sync                                                  | hdl                      |   0   |    955    |          0          |      1145       |
+| axi_generic_adc                                                   | hdl                      |   0   |    881    |          0          |       269       |
+| axi_gpreg                                                         | hdl                      |   0   |    932    |          0          |       604       |
+| axi_hdmi_rx                                                       | hdl                      |   0   |    681    |          0          |       773       |
+| axi_hdmi_tx                                                       | hdl                      |   0   |    739    |          0          |      1299       |
+| axi_intr_monitor                                                  | hdl                      |   0   |    182    |          0          |       221       |
+| axi_laser_driver                                                  | hdl                      |   0   |    283    |          0          |       584       |
+| axi_logic_analyzer                                                | hdl                      |   0   |    689    |          0          |      1042       |
+| axi_ltc235x                                                       | hdl                      |   0   |   1988    |          0          |      1448       |
+| axi_ltc2387                                                       | hdl                      |   0   |    703    |          0          |       787       |
+| axi_pulsar_lvds                                                   | hdl                      |   0   |    666    |          0          |       634       |
+| axi_pulse_gen                                                     | hdl                      |   0   |    201    |          0          |       347       |
+| axi_pwm_gen                                                       | hdl                      |   0   |    131    |          0          |       208       |
+| axi_rd_wr_combiner                                                | hdl                      |   0   |    111    |          0          |       159       |
+| axi_sysid                                                         | hdl                      |   0   |    163    |          0          |       171       |
+| cn0363_cn0363_dma_sequencer                                       | hdl                      |   0   |    142    |          0          |       197       |
+| cn0363_cn0363_phase_data_sync                                     | hdl                      |   0   |    116    |          0          |       166       |
+| common                                                            | hdl                      |   2   |   3642    |          0          |      10522      |
+| cordic_demod                                                      | hdl                      |   0   |    129    |          0          |       205       |
+| data_offload                                                      | hdl                      |   0   |    293    |          0          |      1113       |
+| i3c_controller_i3c_controller_core                                | hdl                      |   0   |    372    |          0          |      1302       |
+| i3c_controller_i3c_controller_host_interface                      | hdl                      |   0   |    465    |          0          |      1566       |
+| spi_engine_axi_spi_engine                                         | hdl                      |   0   |    238    |          0          |       661       |
+| spi_engine_spi_axis_reorder                                       | hdl                      |   0   |    87     |          0          |       140       |
+| spi_engine_spi_engine_execution                                   | hdl                      |   0   |    228    |          0          |       815       |
+| spi_engine_spi_engine_interconnect                                | hdl                      |   0   |    106    |          0          |       121       |
+| spi_engine_spi_engine_offload                                     | hdl                      |   0   |    148    |          0          |       348       |
+| sysid_rom                                                         | hdl                      |   0   |    101    |          0          |       57        |
+| util_adcfifo                                                      | hdl                      |   0   |    200    |          0          |       253       |
+| util_axis_fifo                                                    | hdl                      |   0   |    154    |          0          |       535       |
+| util_axis_fifo_asym                                               | hdl                      |   0   |    128    |          0          |       327       |
+| util_axis_resize                                                  | hdl                      |   0   |    91     |          0          |       163       |
+| util_bsplit                                                       | hdl                      |   0   |    92     |          0          |       76        |
+| util_cdc                                                          | hdl                      |   0   |    143    |          0          |       409       |
+| util_cic                                                          | hdl                      |   0   |    220    |          0          |       205       |
+| util_dacfifo                                                      | hdl                      |   0   |    283    |          0          |       603       |
+| util_do_ram                                                       | hdl                      |   0   |    166    |          0          |       333       |
+| util_extract                                                      | hdl                      |   0   |    105    |          0          |       81        |
+| util_fir_dec                                                      | hdl                      |   0   |    101    |          0          |       67        |
+| util_fir_int                                                      | hdl                      |   0   |    108    |          0          |       79        |
+| util_gmii_to_rgmii                                                | hdl                      |   0   |    153    |          0          |       439       |
+| util_hbm                                                          | hdl                      |   0   |   2502    |          0          |       645       |
+| util_mfifo                                                        | hdl                      |   0   |    190    |          0          |       272       |
+| util_mii_to_rmii                                                  | hdl                      |   0   |    179    |          0          |       610       |
+| util_pack_util_cpack2                                             | hdl                      |   0   |    180    |          0          |       444       |
+| util_pack_util_pack_common                                        | hdl                      |   0   |    266    |          0          |       878       |
+| util_pack_util_upack2                                             | hdl                      |   0   |    191    |          0          |       444       |
+| util_pad                                                          | hdl                      |   0   |    86     |          0          |       83        |
+| util_rfifo                                                        | hdl                      |   0   |    211    |          0          |       405       |
+| util_sigma_delta_spi                                              | hdl                      |   0   |    106    |          0          |       111       |
+| util_tdd_sync                                                     | hdl                      |   0   |    104    |          0          |       98        |
+| util_var_fifo                                                     | hdl                      |   0   |    125    |          0          |       170       |
+| util_wfifo                                                        | hdl                      |   0   |    185    |          0          |       343       |
+| xilinx_axi_adxcvr                                                 | hdl                      |   0   |   2552    |          0          |      5764       |
+| xilinx_axi_dacfifo                                                | hdl                      |   0   |    540    |          0          |      1411       |
+| xilinx_axi_xcvrlb                                                 | hdl                      |   0   |    278    |          0          |       545       |
+| xilinx_common                                                     | hdl                      |   0   |    188    |          0          |      2060       |
+| xilinx_util_adxcvr                                                | hdl                      |   0   |   1444    |          0          |      12202      |
+| xilinx_util_clkdiv                                                | hdl                      |   0   |    92     |          0          |       97        |
+| hdmi                                                              | hdmi                     |   0   |    882    |          0          |      1504       |
+| picorv32                                                          | picorv32                 |   0   |    910    |          0          |      3049       |
+| riffa                                                             | riffa                    |  64   |   49508   |          9          |      17281      |
+| riscv_core                                                        | riscv                    |   0   |   1911    |          0          |      6832       |
+| scr1_top_ahb                                                      | scr1                     |   0   |   4327    |          0          |      14207      |
+| serv_top                                                          | serv                     |   0   |    849    |          0          |      3461       |
+| gpu                                                               | tiny-gpu                 |   0   |   1151    |          0          |      1341       |
+| gpu_card                                                          | verigpu                  |   0   |   6496    |          0          |      6160       |
+| verilog-axi                                                       | verilog-axi              |   8   |   13006   |          3          |      15866      |
+| verilog-pcie                                                      | verilog-pcie             |   0   |   15744   |          0          |      30018      |
+| vortex                                                            | vortex                   |   0   |   1409    |          0          |      3471       |
+| zipcpu                                                            | zipcpu                   |   0   |   5999    |          0          |      48370      |
+| Total                                                             | 147 entries              |  122  |  245595   |         12          |     350335      |
+| Project Count                                                     | -                        |   -   |     -     |          -          |       18        |
+| Average Time                                                      | -                        |   -   | 13644.17  |          -          |        -        |
+| Average Algorithm Time                                            | -                        |   -   |     -     |        0.67         |        -        |
+| Average Source File lines                                         | -                        |   -   |     -     |          -          |     2383.23     |

@@ -32,7 +32,8 @@ verilatorEval() {
 	local -n EVAL_PROJECT=$3
 	sccNum=0 # Data/AstNode level SCC
 	timeConsume=0 # ms
-	report="TopName    Project    SCC    Time(ms)    SourceFileLines"
+	algorithmTimeConsume=0 # ms, reported by Verilator UNOPTFLAT analysis
+	report="TopName    Project    SCC    Time(ms)    AlgorithmTime(ms)    SourceFileLines"
 
 	for boot in "${EVAL_PROJECT[@]}"; do
 		source "$boot"
@@ -87,13 +88,23 @@ verilatorEval() {
 					}
 				}
 				END { print sum + 0 }')
+			algorithmConsume=$(echo "$verilatorOutput" | awk '
+				/UnOptimized: Find [0-9]+ SCCs/ {
+					for (i = 1; i + 4 <= NF; ++i) {
+						if ($i == "SCCs" && $(i + 1) == "in" && $(i + 2) == "design" && $(i + 3) == "in" && $(i + 4) ~ /^[0-9]+$/) {
+							sum += $(i + 4)
+						}
+					}
+				}
+				END { print sum + 0 }')
 
 			end=$(date '+%s%N')
 			consume=$(( (end - begin) / 1000000 ))
 			timeConsume=$(( timeConsume + consume ))
+			algorithmTimeConsume=$(( algorithmTimeConsume + algorithmConsume ))
 
 			sccNum=$(( sccNum + SCC ))
-			report=$(printf "%s\n%s\t%s\t%d\t%d\t%d\t" "$report" "$top" "$project_name" "$SCC" "$consume" "$projectSourceLines")
+			report=$(printf "%s\n%s\t%s\t%d\t%d\t%d\t%d\t" "$report" "$top" "$project_name" "$SCC" "$consume" "$algorithmConsume" "$projectSourceLines")
 		done
 	done
 

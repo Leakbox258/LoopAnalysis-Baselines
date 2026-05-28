@@ -45,7 +45,7 @@
 | pcie_axil_master_minimal  | verilog-pcie |   0    |    855    |      30018      |
 | pcie_axil_master          | verilog-pcie |   0    |    854    |      30018      |
 | pcie_axi_master           | verilog-pcie |   0    |    867    |      30018      |
-| \pcie_axi_dma_desc_mux    | verilog-pcie |   0    |    896    |      30018      |
+| pcie_axi_dma_desc_mux     | verilog-pcie |   0    |    896    |      30018      |
 | irq_rate_limit            | verilog-pcie |   0    |    872    |      30018      |
 | dma_ram_demux             | verilog-pcie |   0    |    862    |      30018      |
 | dma_psdpram_async         | verilog-pcie |   0    |    844    |      30018      |

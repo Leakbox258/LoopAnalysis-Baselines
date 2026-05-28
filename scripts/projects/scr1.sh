@@ -44,7 +44,7 @@ qualify() {
 			return 0
 			;;
 		"eval-wiresort")
-			return 0
+			return 1
 			;;
 		"eval-yosys")
 			return 0
